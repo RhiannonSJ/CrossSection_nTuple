@@ -1,0 +1,25 @@
+BEGIN_PROLOG
+
+parameterFinding:
+{ 
+    module_type:                "ParameterFinding"
+
+     Selection1 : [ 1, 13 ]
+     Selection2 : [ 0, 211, -211, 111 ]
+     Selection3 : [ 1, 14 ]
+ 
+     DetectorHalfLengthX: 400.
+     DetectorHalfLengthY: 400.
+     DetectorHalfLengthZ: 500.
+     CoordinateOffsetX: 200.
+     CoordinateOffsetY: 200.
+     CoordinateOffsetZ: 0.
+     SelectedBorderX: 15.
+     SelectedBorderY: 30.
+     SelectedBorderZ: 15.
+
+
+}
+
+END_PROLOG
+

@@ -1,0 +1,14 @@
+#!/bin/bash
+
+WORKING_DIR=/sbnd/app/users/rsjones/LArSoft_v06_56_00/LArSoft-v06_56_00/srcs/crosssectionntuple/crosssectionntuple/working_dir
+PANDORA_DIR=/sbnd/app/users/rsjones/LArSoft_v06_56_00/LArSoft-v06_56_00/srcs/crosssectionntuple/crosssectionntuple
+
+TEST_SBN_SINGLE_1=/pnfs/sbnd/scratch/users/rsjones/pandora_reco/pandorareco/2747919_0/prodgenie_sbnd_GenieGen-20171018T120539_e7e58f3a-459f-45f9-9ce1-d4bcc8a6ab82_G4-20171018T141654_DetSim-20171018T165226_Reco-20180109T204556.root
+
+rm -rf $WORKING_DIR/*
+
+cd $WORKING_DIR
+
+lar -c run_parameterFinding.fcl -s $TEST_SBN_SINGLE_1
+
+cd $PANDORA_DIR
