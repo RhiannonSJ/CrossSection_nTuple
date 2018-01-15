@@ -235,10 +235,11 @@ void xsec::ParameterFinding::analyze(art::Event const & e)
             curr_z = xyz[2];
             curr_r = sqrt( pow( curr_x - x, 2 )    + pow( curr_y - y, 2 )    + pow( curr_z - z, 2 ) );
 
+            // If we are dealing with a good fit between reconstruction packages 
+            // and we are looking at the pandora-defined primary
+            //    Do some nTuple filling!
             if( curr_r == pma_pndr_distance ){
             
-              std::cout << " PMA - Pandora distance : " << curr_r << std::endl;
-           
               primary++;
 
             }
