@@ -1,5 +1,5 @@
 # CrossSection_nTuple
-Creating an nTuple for the cross-section analysis work
+Creating an nTuple for general-topology analysis work
 
 # ParameterFinding
-Determining how best to access the parameters needed for the cross-section anaylses
+Determining how best to access the parameters needed for the anaylses
