@@ -34,6 +34,7 @@
 #include "lardataobj/MCBase/MCTrack.h"
 #include "larreco/RecoAlg/PMAlg/PmaTrack3D.h"
 #include "lardataobj/AnalysisBase/Calorimetry.h"
+#include "lardataobj/AnalysisBase/ParticleID.h"
 
 #include <cmath>
 #include <vector>
@@ -111,6 +112,8 @@ void xsec::ParameterFinding::analyze(art::Event const & e)
   e.getByLabel("generator", mct_handle );
   int mct_size = mct_handle->size();
 
+  std::cout << " PDG Codes, truth : " << std::endl;
+  
   if(mct_handle.isValid() && mct_size) {
   
     // Loop over the truth info
@@ -119,6 +122,9 @@ void xsec::ParameterFinding::analyze(art::Event const & e)
       // Check the neutrino came from the beam
       if(mct.Origin() != simb::kBeamNeutrino) continue;
 
+      for( int i = 0; i < mct.NParticles(); ++i ){
+        std::cout << mct.GetParticle(i).PdgCode() << std::endl;
+      }
       // True neutrino vertex ( primary vertex position)
       double nu_x, nu_y, nu_z;
 
@@ -244,6 +250,36 @@ void xsec::ParameterFinding::analyze(art::Event const & e)
 
             }
           }
+        }
+      }
+
+      // Start to look at PID
+      art::Handle< std::vector< anab::ParticleID > > pid_handle;
+      e.getByLabel("chi2pid", pid_handle );
+      int pid_size = pid_handle->size();
+
+      // Check that we can access the PID information
+      if( pid_size && pid_handle.isValid() ){
+    
+        for( int i = 0; i < pid_size; ++i ){
+   
+          std::cout << "--------------------------------------------------" << std::endl;
+
+          art::Ptr< anab::ParticleID > pid( pid_handle, i );
+       
+          std::cout << "PGD         : " << pid->Pdg()         << std::endl;
+          std::cout << "NDF         : " << pid->Ndf()         << std::endl;
+          std::cout << "MinChi2     : " << pid->MinChi2()     << std::endl;
+          std::cout << "DeltaChi2   : " << pid->DeltaChi2()   << std::endl;
+          std::cout << "PIDA        : " << pid->PIDA()        << std::endl;
+          std::cout << "Chi2Proton  : " << pid->Chi2Proton()  << std::endl;
+          std::cout << "Chi2Kaon    : " << pid->Chi2Kaon()    << std::endl;
+          std::cout << "Chi2Pion    : " << pid->Chi2Pion()    << std::endl;
+          std::cout << "Chi2Muon    : " << pid->Chi2Muon()    << std::endl;
+          std::cout << "MissingE    : " << pid->MissingE()    << std::endl;
+          std::cout << "MissingEAvg : " << pid->MissingEavg() << std::endl;
+          std::cout << "PlaneID()   : " << pid->PlaneID()     << std::endl;
+
         }
       }
     }

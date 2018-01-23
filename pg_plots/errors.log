@@ -1,0 +1,10 @@
+%MSG-w ColorDrawingOptions:  Early 23-Jan-2018 12:46:56 CST JobSetup
+only 1 value given for raw color scale: number of divisions, low and high values.
+Pad out those values for the number of signal types.
+%MSG
+%MSG-w ColorDrawingOptions:  Early 23-Jan-2018 12:46:56 CST JobSetup
+only 1 value given for reco color scale: number of divisions, low and high values.
+Pad out those values for the number of signal types.
+%MSG
+23-Jan-2018 12:46:56 CST  Initiating request to open input file "/pnfs/sbnd/scratch/users/rsjones/muon_pandora_reco/muonpandorareco/3114263_0/prodsingle_sbnd_SinglesGen-20171018T115112_28250c9f-ff4b-4075-9424-b551371cbc9c_G4-20171018T121545_DetSim-20171018T132202_PIDReco-20180122T122009.root"
+23-Jan-2018 12:47:00 CST  Opened input file "/pnfs/sbnd/scratch/users/rsjones/muon_pandora_reco/muonpandorareco/3114263_0/prodsingle_sbnd_SinglesGen-20171018T115112_28250c9f-ff4b-4075-9424-b551371cbc9c_G4-20171018T121545_DetSim-20171018T132202_PIDReco-20180122T122009.root"
