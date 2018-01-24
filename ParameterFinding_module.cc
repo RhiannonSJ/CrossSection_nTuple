@@ -76,7 +76,6 @@ public:
 private:
 
   // Declare member data here.
-  std::map< std::vector< int >, int > m_selection;
   float m_detectorHalfLengthX;
   float m_detectorHalfLengthY;
   float m_detectorHalfLengthZ;
@@ -87,7 +86,6 @@ private:
   float m_selectedBorderY;
   float m_selectedBorderZ;
 
-  // Counters
   int primary;
 
 };
@@ -304,32 +302,6 @@ void xsec::ParameterFinding::endJob()
 void xsec::ParameterFinding::reconfigure(fhicl::ParameterSet const & p)
 {
   // Implementation of optional member function here.
-   std::vector< int > blankVect;
-   std::vector< std::vector< int > > input;
- 
-   std::vector< int > selection1 = p.get< std::vector< int > >("Selection1",        blankVect);
-   if ( selection1.size() != 0 ) input.push_back(selection1);
- 
-   std::vector< int > selection2 = p.get< std::vector< int > >("Selection2",        blankVect);
-   if ( selection2.size() != 0 ) input.push_back(selection2);
- 
-   std::vector< int > selection3 = p.get< std::vector< int > >("Selection3",        blankVect);
-   if ( selection3.size() != 0 ) input.push_back(selection3);
- 
- 
-   for ( auto & inputVect : input ) {
-     if ( inputVect.size() < 2 ) {
-       std::cerr << " Error: Selection vector must have at least 2 elements " <<    std::endl;
-       std::cerr << "        First element:     Number of particles of PDG code(s)  specified " << std::endl;
-       std::cerr << "        Remaining element: PDG codes to filter on " << std::   endl;
-       exit(1);
-     }
- 
-     int count = inputVect[0];
-     inputVect.erase( inputVect.begin() );
- 
-     m_selection.insert( std::make_pair( inputVect, count ) );
-   }
  
    m_detectorHalfLengthX = p.get<float>("DetectorHalfLengthX");
    m_detectorHalfLengthY = p.get<float>("DetectorHalfLengthY");

@@ -1,0 +1,20 @@
+BEGIN_PROLOG
+
+analysisNTuple:
+{ 
+  module_type:                "AnalysisNTuple"
+
+  DetectorHalfLengthX: 400.
+  DetectorHalfLengthY: 400.
+  DetectorHalfLengthZ: 500.
+  CoordinateOffsetX: 200.
+  CoordinateOffsetY: 200.
+  CoordinateOffsetZ: 0.
+  SelectedBorderX: 15.
+  SelectedBorderY: 30.
+  SelectedBorderZ: 15.
+
+}
+
+END_PROLOG
+

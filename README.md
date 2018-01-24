@@ -8,5 +8,5 @@ Used on muons and protons to check they match the work done by Tom in summer 201
 
 Distributions are located in pg_plots
 
-# ParameterFinding
-Writing particle and event information into various nTuples for use in a reconstruction-based event selection tool
+#AnalysisNTuple
+Writing particle and event information into various trees for use in a reconstruction-based event selection tool
