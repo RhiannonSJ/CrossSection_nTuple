@@ -99,8 +99,7 @@ private:
   float m_selectedBorderZ;
 
   // Counters
-  int all_events, fiducial_contained_events;
-  int all_tracks, fiducial_contained_tracks;
+  int all_events, fiducial_events;
 
   // ROOT
   TTree *event_tree, *mcparticle_tree, *recotrack_tree, *recoshower_tree;
@@ -112,10 +111,11 @@ private:
   // Truth
   int t_nu_pdgcode, t_interaction;
   int t_particles;
-  int t_protons, t_muons, t_charged_pions, t_kaons, t_neutral_pions;
-  double t_inv_mass, t_nu_lepton_angle, t_vertex_energy;
-  double t_vertex[3];
-  
+  int t_protons, t_neutrons, t_muons, t_charged_pions, t_kaons, t_neutral_pions, t_photons, t_electrons;
+  double t_inv_mass, t_nu_lepton_angle, t_vertex_energy, t_bjorkenx, t_inelasticity, t_qsqr, t_pt;
+  double t_vertex[3], t_momentum[3];
+  bool t_iscc;
+
   // Reco
   int r_particles, r_tracks, r_showers;
   double r_vertex[3];
@@ -155,10 +155,7 @@ void pndr::AnalysisNTuple::analyze(art::Event const & e)
   // Get tracks and check they remain in the fiducial volume 
   art::Handle< std::vector< recob::Track > > trk_handle;
   e.getByLabel("pmalgtrackmaker", trk_handle );
-  int trk_size = trk_handle->size();
  
-  all_tracks += trk_size;
-
   /*
   art::Handle< std::vector< recob::Shower > > shw_handle;
   e.getByLabel("pandoraNu", shw_handle );
@@ -191,7 +188,7 @@ void pndr::AnalysisNTuple::analyze(art::Event const & e)
   // and all tracks are contained
   if(contained){
   
-    fiducial_contained_events++;
+    fiducial_events++;
     
     // Get the MCTruth information 
     art::Handle< std::vector< simb::MCTruth > > mct_handle;
@@ -200,7 +197,7 @@ void pndr::AnalysisNTuple::analyze(art::Event const & e)
   
     art::Handle< std::vector< recob::Track > > trk_handle;
     e.getByLabel("pmalgtrackmaker", trk_handle );
-    int trk_size = trk_handle->size();
+  int trk_size = trk_handle->size();
    
     art::Handle< std::vector< recob::Shower > > shw_handle;
     e.getByLabel("pandoraNu", shw_handle );
@@ -223,7 +220,7 @@ void pndr::AnalysisNTuple::analyze(art::Event const & e)
 // ------------------------------------------------------------------------------
       
       // Initialise counter for the number of reconstructed primary particles
-      int n_primaries           = 0;
+      int n_primaries          = 0;
       int n_primary_tracks     = 0;
       int n_primary_showers    = 0;
       unsigned int neutrino_id = 0;
@@ -350,76 +347,63 @@ void pndr::AnalysisNTuple::analyze(art::Event const & e)
       art::FindMany< simb::MCParticle  > fmcp( mct_handle, e, "largeant" );
       
       // Loop over the truth handle and get everything we can
-      for(int i = 0; i < mct_size; ++i) {
+      if(mct_size != 1) return;
     
-        std::cout << "----------------------------------------------------------------" << std::endl;
-        art::Ptr< simb::MCTruth > mct( mct_handle, i );
+      art::Ptr< simb::MCTruth > mct(mct_handle, 0);
 
-        std::cout << " Interaction type : " << mct->GetNeutrino().InteractionType() << std::endl;
-
-        // Number of true final state particles
-        t_particles = mct->NParticles() - 1;
-
-        for( int j = 0; j < mct->NParticles(); ++j ) {
-        
-          simb::MCParticle part = mct->GetParticle(j);
-          int motherPdg(mct->GetParticle(part.Mother()).PdgCode());
-          
-          std::cout << "----------------------------------------------------------------" << std::endl;
-          std::cout << " ID : " << part.TrackId() << ", PdgCode : " << part.PdgCode() << ", Mother PdgCode : " << motherPdg << ", Mother ID : " << part.Mother();
-          std::cout << ", Process : " << part.Process() << std::endl;
-         
-          /*
-          if(part.Mother() != -1){
-            int grandmotherPdg(mct->GetParticle(mct->GetParticle(part.Mother()).Mother()).PdgCode());
-
-            if((motherPdg == 14 || grandmotherPdg == 1000180400) && part.PdgCode() != 1000180390){
-            
-              std::cout << "----------------------------------------------------------------" << std::endl;
-              std::cout << " ID : " << part.TrackId() << ", PdgCode : " << part.PdgCode() << ", Mother PdgCode : " << motherPdg << ", Mother ID : " << part.Mother();
-              std::cout << ", Process : " << part.Process() << std::endl;
-            
-            }
-          }*/
-        }
-        
-        std::cout << "====================================================================" << std::endl;
-
-        std::vector<const simb::MCParticle*> mcp_assn = fmcp.at(i);
-        
-        for(const simb::MCParticle* part : mcp_assn) {
-
-          int motherPdg(mct->GetParticle(part->Mother()).PdgCode());
-          
-          std::cout << "----------------------------------------------------------------" << std::endl;
-          std::cout << " ID : " << part->TrackId() << ", PdgCode : " << part->PdgCode() << ", Mother PdgCode : " << motherPdg << ", Mother ID : " << part->Mother();
-          std::cout << ", Process : " << part->Process() << std::endl;
-         
-          /*
-          if(part.Mother() != -1){
-            int grandmotherPdg(mct->GetParticle(mct->GetParticle(part.Mother()).Mother()).PdgCode());
-
-            if((motherPdg == 14 || grandmotherPdg == 1000180400) && part.PdgCode() != 1000180390){
-            
-              std::cout << "----------------------------------------------------------------" << std::endl;
-              std::cout << " ID : " << part.TrackId() << ", PdgCode : " << part.PdgCode() << ", Mother PdgCode : " << motherPdg << ", Mother ID : " << part.Mother();
-              std::cout << ", Process : " << part.Process() << std::endl;
-            
-            }
-          }*/
-        
-        }
-        /*// Loop over particles starting from the second since the first is 
-        // the neutrino
-        for(unsigned int j = 1; < mct->NParticles(); ++j){
+      std::vector<const simb::MCParticle*> mcp_assn = fmcp.at(0);
+    
+      simb::MCNeutrino nu = mct->GetNeutrino();
       
-          simb::MCParticle part = mct->GetParticle(j);
+      // Start defining truth variables
+      t_nu_pdgcode      = nu.Nu().PdgCode();
+      t_iscc            = nu.CCNC() == simb::curr_type_::kCC;
+      t_interaction     = nu.InteractionType();
+      t_vertex[0]       = nu.Nu().Vx();
+      t_vertex[1]       = nu.Nu().Vy();
+      t_vertex[2]       = nu.Nu().Vz();
+      t_momentum[0]     = nu.Nu().Px();
+      t_momentum[1]     = nu.Nu().Py();
+      t_momentum[2]     = nu.Nu().Pz();
+      t_vertex_energy   = nu.Nu().E();
+      t_inv_mass        = nu.W();
+      t_nu_lepton_angle = nu.Theta();
+      t_qsqr            = nu.QSqr();
+      t_pt              = nu.Pt();
+      t_bjorkenx        = nu.X();
+      t_inelasticity    = nu.Y();
 
-        
-        }*/
-      }
-      event_id += 1;
+      t_particles       = 0;
+      t_photons         = 0;
+      t_electrons       = 0;
+      t_neutral_pions   = 0;
+      t_charged_pions   = 0;
+      t_protons         = 0;
+      t_neutrons        = 0;
+      t_kaons           = 0;
+      t_muons           = 0;
+
+      // Counters
+      for(const simb::MCParticle* part : mcp_assn) {
+       
+        if(part->Process() != "primary" || part->Mother() != 0) continue;
   
+        t_particles++;
+
+        // Find the number of individual particle types
+        if( part->PdgCode() == 22 )   t_photons++;
+        if( part->PdgCode() == 111 )  t_neutral_pions++;
+        if( part->PdgCode() == 2212 ) t_protons++;
+        if( part->PdgCode() == 2112 ) t_neutrons++;
+        if( part->PdgCode() == 11   || part->PdgCode() == -11 )  t_electrons++;
+        if( part->PdgCode() == 13   || part->PdgCode() == -13 )  t_muons++;
+        if( part->PdgCode() == 211  || part->PdgCode() == -211 ) t_charged_pions++;
+        if( part->PdgCode() == 321  || part->PdgCode() == -321 || part->PdgCode() == 311 ) t_kaons++;
+        
+      }
+      // Add one to the event counter
+      event_id += 1;
+
       // Fill the event tree once everything has been set
       event_tree->Fill();
 
@@ -431,9 +415,8 @@ void pndr::AnalysisNTuple::beginJob()
 {
   // Implementation of optional member function here.
   // Initialise the counters
-  all_events                = 0;
-  all_tracks                = 0;
-  fiducial_contained_events = 0;
+  all_events      = 0;
+  fiducial_events = 0;
 
   event_id = 0;
 
@@ -446,17 +429,26 @@ void pndr::AnalysisNTuple::beginJob()
   // Event tree branches
   event_tree->Branch("event_id",          &event_id,          "event_id/I");
   event_tree->Branch("t_nu_pdgcode",      &t_nu_pdgcode,      "t_nu_pdgcode/I");
+  event_tree->Branch("t_iscc",            &t_iscc,            "t_iscc/O");
   event_tree->Branch("t_interaction",     &t_interaction,     "t_interaction/I");
+  event_tree->Branch("t_vertex",          &t_vertex,          "t_vertex[3]/D");
+  event_tree->Branch("t_momentum",        &t_momentum,        "t_momentum[3]/D");
   event_tree->Branch("t_particles",       &t_particles,       "t_particles/I");
   event_tree->Branch("t_protons",         &t_protons,         "t_protons/I");
+  event_tree->Branch("t_neutrons",        &t_neutrons,        "t_neutrons/I");
   event_tree->Branch("t_muons",           &t_muons,           "t_muons/I");
   event_tree->Branch("t_charged_pions",   &t_charged_pions,   "t_charged_pions/I");
   event_tree->Branch("t_neutral_pions",   &t_neutral_pions ,  "t_neutral_pions/I");
   event_tree->Branch("t_kaons",           &t_kaons,           "t_kaons/I");
+  event_tree->Branch("t_photons",         &t_photons,         "t_photons/I");
+  event_tree->Branch("t_electrons",       &t_electrons,       "t_electrons/I");
+  event_tree->Branch("t_inv_mass",        &t_inv_mass,        "t_inv_mass/D");
+  event_tree->Branch("t_qsqr",            &t_qsqr,            "t_qsqr/D");
+  event_tree->Branch("t_pt",              &t_pt,              "t_pt/D");
+  event_tree->Branch("t_bjorkenx",        &t_bjorkenx,        "t_bjorkenx/D");
   event_tree->Branch("t_inv_mass",        &t_inv_mass,        "t_inv_mass/D");
   event_tree->Branch("t_nu_lepton_angle", &t_nu_lepton_angle, "t_nu_lepton_angle/D");
   event_tree->Branch("t_vertex_energy",   &t_vertex_energy,   "t_vertex_energy/D");
-  event_tree->Branch("t_vertex",          &t_vertex,          "t_vertex[3]/D");
   event_tree->Branch("r_particles",       &r_particles,       "r_particles/I");
   event_tree->Branch("r_tracks",          &r_tracks,          "r_tracks/I");
   event_tree->Branch("r_showers",         &r_showers,         "r_showers/I");
@@ -489,7 +481,7 @@ void pndr::AnalysisNTuple::endJob()
   std::cout << std::endl;
 
   std::cout << " Fraction of fiducial events with contained tracks : ";
-  std::cout << fiducial_contained_events / double(all_events);
+  std::cout << fiducial_events / double(all_events);
   std::cout << std::endl;
 
   std::cout << "---------------------------------------------------------------------------------" << std::endl;
