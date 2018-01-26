@@ -112,7 +112,7 @@ private:
   int t_nu_pdgcode, t_interaction;
   int t_particles;
   int t_protons, t_neutrons, t_muons, t_charged_pions, t_kaons, t_neutral_pions, t_photons, t_electrons;
-  double t_inv_mass, t_nu_lepton_angle, t_vertex_energy, t_bjorkenx, t_inelasticity, t_qsqr, t_pt;
+  double t_inv_mass, t_nu_lepton_angle, t_vertex_energy, t_bjorkenx, t_inelasticity, t_qsqr, t_transverse_momentum;
   double t_vertex[3], t_momentum[3];
   bool t_iscc;
 
@@ -121,8 +121,17 @@ private:
   double r_vertex[3];
 
   // Variables associated with mcparticle_tree
+  int p_pdgcode;
+  double p_vertex[3], p_end[3], p_momentum[3];
+  double p_energy, p_mass, p_transverse_momentum, p_momentum_magnitude;
+
   // Variables associated with recotrack_tree
+  double tr_pida, tr_chi2_mu, tr_chi2_pi, tr_chi2_pr, tr_chi2_ka;
+  double tr_vertex[3], tr_end[3], tr_dedx[dedx_size], tr_residual_range[residual_range_size];
+  double tr_length, tr_kinetic_energy, tr_range, tr_missing_energy;
+
   // Variables associated with recoshower_tree
+  double sh_start[3], sh_direction[3], sh_length, sh_open_angle;
   
 };
 
@@ -210,7 +219,10 @@ void pndr::AnalysisNTuple::analyze(art::Event const & e)
 // ------------------------------------------------------------------------------
 //                           EVENT-TREE INFORMATION
 // ------------------------------------------------------------------------------
-    if(mct_handle.isValid() && mct_size && 
+    // Loop over the truth handle and get everything we can
+    if(mct_size != 1) return;
+    
+    if(mct_handle.isValid() &&
        shw_handle.isValid() && 
        pfp_handle.isValid() && pfp_size && 
        trk_handle.isValid() ) {
@@ -226,7 +238,6 @@ void pndr::AnalysisNTuple::analyze(art::Event const & e)
       unsigned int neutrino_id = 0;
      
       bool neutrino_found = false;
-      bool muon_neutrino = false;
 
       // Loop over PFParticles and find how many are primary and whether 
       // only 1 neutrino was found
@@ -237,16 +248,13 @@ void pndr::AnalysisNTuple::analyze(art::Event const & e)
         // Only look for a single muon neutrino event
         if(!neutrino_found && pfp->IsPrimary()){
           neutrino_found = true;
-          if(pfp->PdgCode() == 14) {
-            muon_neutrino = true;
-            neutrino_id = pfp->Self();
-          }
+          neutrino_id = pfp->Self();
         }
         else if(pfp->IsPrimary()) return;
       
       }
 
-      if(!muon_neutrino) return;
+      if(!neutrino_found) return;
 
       // Get vertex association
       art::FindMany< recob::Vertex  > fvtx( pfp_handle, e, "pandoraNu" );
@@ -254,6 +262,9 @@ void pndr::AnalysisNTuple::analyze(art::Event const & e)
 
       if(vtx_assn.size()  > 1) return;
       if(vtx_assn.size() == 0) return;
+
+      // Add one to the event counter
+      event_id += 1;
 
       // Set array to be current vertex position
       vtx_assn[0]->XYZ(r_vertex);
@@ -291,11 +302,32 @@ void pndr::AnalysisNTuple::analyze(art::Event const & e)
           // If the end is closer than the vertex, flip the track
           bool should_flip = s_end < s_vtx;
 
+          // If we should flip the track, define the end to be the start and the start to be the end
+          // recalculate the distance between the vertex and the track vertex
+          if(should_flip){
+          
+            // Temporary doubles to hold the will-be end points
+            double temp_end_x = track_vtx_x; 
+            double temp_end_y = track_vtx_y; 
+            double temp_end_z = track_vtx_z; 
+
+            track_vtx_x = track_end_x;
+            track_vtx_y = track_end_y;
+            track_vtx_z = track_end_z;
+            
+            track_end_x = temp_end_x;
+            track_end_y = temp_end_y;
+            track_end_z = temp_end_z;
+
+            s_vtx = sqrt(pow(track_vtx_x - r_vertex[0],2) + pow(track_vtx_y - r_vertex[1],2) + pow(track_vtx_z - r_vertex[2],2));
+          
+          }
+
           // If the track is the right way around and the vertex is within 2cm of 
           // the primary vertex location, add a counter to the number of primary tracks
           // Or if the track is the wrong way around and the end is within 10cm of the
           // primary vertex location, add a counter to the number of primary tracks
-          if((!should_flip && s_vtx > 10) || (should_flip  && s_end > 10)) continue;
+          if(s_vtx > 10) continue;
             
           // Check that the primary track's start and end position is within the detector volume
           if (    (track_vtx_x > (m_detectorHalfLengthX - m_coordinateOffsetX - m_selectedBorderX)) 
@@ -312,7 +344,14 @@ void pndr::AnalysisNTuple::analyze(art::Event const & e)
                || (track_end_z < (-m_coordinateOffsetZ + m_selectedBorderZ))) continue;
             
           // Try and eliminate shower fragments
-          if(trk->Length() > 0.5) n_primary_tracks++;
+          if(trk->Length() > 0.5) {
+
+            // Add one to the counter for the event tree
+            n_primary_tracks++;
+
+            // Get the track-based variables
+
+          }
         } 
       }
       if(shw_handle.isValid() && shw_size) {
@@ -329,7 +368,12 @@ void pndr::AnalysisNTuple::analyze(art::Event const & e)
          
           // Cut of 40 cm for showers to accommodate photon conversion after
           // neutral pion decay
-          if(s_vtx < 40) n_primary_showers++;
+          if(s_vtx < 40) {
+            
+            // Add one to the counter for the event tree
+            n_primary_showers++;
+
+          }
         }
       }
 
@@ -346,9 +390,6 @@ void pndr::AnalysisNTuple::analyze(art::Event const & e)
 
       art::FindMany< simb::MCParticle  > fmcp( mct_handle, e, "largeant" );
       
-      // Loop over the truth handle and get everything we can
-      if(mct_size != 1) return;
-    
       art::Ptr< simb::MCTruth > mct(mct_handle, 0);
 
       std::vector<const simb::MCParticle*> mcp_assn = fmcp.at(0);
@@ -356,22 +397,22 @@ void pndr::AnalysisNTuple::analyze(art::Event const & e)
       simb::MCNeutrino nu = mct->GetNeutrino();
       
       // Start defining truth variables
-      t_nu_pdgcode      = nu.Nu().PdgCode();
-      t_iscc            = nu.CCNC() == simb::curr_type_::kCC;
-      t_interaction     = nu.InteractionType();
-      t_vertex[0]       = nu.Nu().Vx();
-      t_vertex[1]       = nu.Nu().Vy();
-      t_vertex[2]       = nu.Nu().Vz();
-      t_momentum[0]     = nu.Nu().Px();
-      t_momentum[1]     = nu.Nu().Py();
-      t_momentum[2]     = nu.Nu().Pz();
-      t_vertex_energy   = nu.Nu().E();
-      t_inv_mass        = nu.W();
-      t_nu_lepton_angle = nu.Theta();
-      t_qsqr            = nu.QSqr();
-      t_pt              = nu.Pt();
-      t_bjorkenx        = nu.X();
-      t_inelasticity    = nu.Y();
+      t_nu_pdgcode          = nu.Nu().PdgCode();
+      t_iscc                = nu.CCNC() == simb::curr_type_::kCC;
+      t_interaction         = nu.InteractionType();
+      t_vertex[0]           = nu.Nu().Vx();
+      t_vertex[1]           = nu.Nu().Vy();
+      t_vertex[2]           = nu.Nu().Vz();
+      t_momentum[0]         = nu.Nu().Px();
+      t_momentum[1]         = nu.Nu().Py();
+      t_momentum[2]         = nu.Nu().Pz();
+      t_vertex_energy       = nu.Nu().E();
+      t_inv_mass            = nu.W();
+      t_nu_lepton_angle     = nu.Theta();
+      t_qsqr                = nu.QSqr();
+      t_transverse_momentum = nu.Pt();
+      t_bjorkenx            = nu.X();
+      t_inelasticity        = nu.Y();
 
       t_particles       = 0;
       t_photons         = 0;
@@ -383,10 +424,12 @@ void pndr::AnalysisNTuple::analyze(art::Event const & e)
       t_kaons           = 0;
       t_muons           = 0;
 
-      // Counters
+      // Counters and filling the mcparticle_tree
       for(const simb::MCParticle* part : mcp_assn) {
-       
-        if(part->Process() != "primary" || part->Mother() != 0) continue;
+  
+        // ATTENTION: Cut on PGD codes which refer to elements (Argon39 and above) 
+        // Only interested in the final state PARTICLES
+        if(part->Process() != "primary" || part->PdgCode() >= 1000018039) continue;
   
         t_particles++;
 
@@ -399,11 +442,26 @@ void pndr::AnalysisNTuple::analyze(art::Event const & e)
         if( part->PdgCode() == 13   || part->PdgCode() == -13 )  t_muons++;
         if( part->PdgCode() == 211  || part->PdgCode() == -211 ) t_charged_pions++;
         if( part->PdgCode() == 321  || part->PdgCode() == -321 || part->PdgCode() == 311 ) t_kaons++;
-        
-      }
-      // Add one to the event counter
-      event_id += 1;
 
+        p_pdgcode             = part->PdgCode();
+        p_vertex[0]           = part->Vx();
+        p_vertex[1]           = part->Vy();
+        p_vertex[2]           = part->Vz();
+        p_end[0]              = part->EndX();
+        p_end[1]              = part->EndY();
+        p_end[2]              = part->EndZ();
+        p_momentum[0]         = part->Px();
+        p_momentum[1]         = part->Py();
+        p_momentum[2]         = part->Pz();
+        p_energy              = part->E();
+        p_mass                = part->Mass();
+        p_transverse_momentum = part->Pt();
+        p_momentum_magnitude  = part->P();
+
+        mcparticle_tree->Fill();
+
+      }
+      
       // Fill the event tree once everything has been set
       event_tree->Fill();
 
@@ -427,35 +485,53 @@ void pndr::AnalysisNTuple::beginJob()
   recoshower_tree = new TTree("recoshower_tree", "Shower tree: Reconstructed final state shower information");
 
   // Event tree branches
-  event_tree->Branch("event_id",          &event_id,          "event_id/I");
-  event_tree->Branch("t_nu_pdgcode",      &t_nu_pdgcode,      "t_nu_pdgcode/I");
-  event_tree->Branch("t_iscc",            &t_iscc,            "t_iscc/O");
-  event_tree->Branch("t_interaction",     &t_interaction,     "t_interaction/I");
-  event_tree->Branch("t_vertex",          &t_vertex,          "t_vertex[3]/D");
-  event_tree->Branch("t_momentum",        &t_momentum,        "t_momentum[3]/D");
-  event_tree->Branch("t_particles",       &t_particles,       "t_particles/I");
-  event_tree->Branch("t_protons",         &t_protons,         "t_protons/I");
-  event_tree->Branch("t_neutrons",        &t_neutrons,        "t_neutrons/I");
-  event_tree->Branch("t_muons",           &t_muons,           "t_muons/I");
-  event_tree->Branch("t_charged_pions",   &t_charged_pions,   "t_charged_pions/I");
-  event_tree->Branch("t_neutral_pions",   &t_neutral_pions ,  "t_neutral_pions/I");
-  event_tree->Branch("t_kaons",           &t_kaons,           "t_kaons/I");
-  event_tree->Branch("t_photons",         &t_photons,         "t_photons/I");
-  event_tree->Branch("t_electrons",       &t_electrons,       "t_electrons/I");
-  event_tree->Branch("t_inv_mass",        &t_inv_mass,        "t_inv_mass/D");
-  event_tree->Branch("t_qsqr",            &t_qsqr,            "t_qsqr/D");
-  event_tree->Branch("t_pt",              &t_pt,              "t_pt/D");
-  event_tree->Branch("t_bjorkenx",        &t_bjorkenx,        "t_bjorkenx/D");
-  event_tree->Branch("t_inv_mass",        &t_inv_mass,        "t_inv_mass/D");
-  event_tree->Branch("t_nu_lepton_angle", &t_nu_lepton_angle, "t_nu_lepton_angle/D");
-  event_tree->Branch("t_vertex_energy",   &t_vertex_energy,   "t_vertex_energy/D");
-  event_tree->Branch("r_particles",       &r_particles,       "r_particles/I");
-  event_tree->Branch("r_tracks",          &r_tracks,          "r_tracks/I");
-  event_tree->Branch("r_showers",         &r_showers,         "r_showers/I");
-  event_tree->Branch("r_vertex",          &r_vertex,          "r_vertex[3]/D");
+  event_tree->Branch("event_id",              &event_id,              "event_id/I");
+  event_tree->Branch("t_nu_pdgcode",          &t_nu_pdgcode,          "t_nu_pdgcode/I");
+  event_tree->Branch("t_iscc",                &t_iscc,                "t_iscc/O");
+  event_tree->Branch("t_interaction",         &t_interaction,         "t_interaction/I");
+  event_tree->Branch("t_vertex",              &t_vertex,              "t_vertex[3]/D");
+  event_tree->Branch("t_momentum",            &t_momentum,            "t_momentum[3]/D");
+  event_tree->Branch("t_particles",           &t_particles,           "t_particles/I");
+  event_tree->Branch("t_protons",             &t_protons,             "t_protons/I");
+  event_tree->Branch("t_neutrons",            &t_neutrons,            "t_neutrons/I");
+  event_tree->Branch("t_muons",               &t_muons,               "t_muons/I");
+  event_tree->Branch("t_charged_pions",       &t_charged_pions,       "t_charged_pions/I");
+  event_tree->Branch("t_neutral_pions",       &t_neutral_pions,       "t_neutral_pions/I");
+  event_tree->Branch("t_kaons",               &t_kaons,               "t_kaons/I");
+  event_tree->Branch("t_photons",             &t_photons,             "t_photons/I");
+  event_tree->Branch("t_electrons",           &t_electrons,           "t_electrons/I");
+  event_tree->Branch("t_inv_mass",            &t_inv_mass,            "t_inv_mass/D");
+  event_tree->Branch("t_qsqr",                &t_qsqr,                "t_qsqr/D");
+  event_tree->Branch("t_transverse_momentum", &t_transverse_momentum, "t_transverse_momentum/D");
+  event_tree->Branch("t_bjorkenx",            &t_bjorkenx,            "t_bjorkenx/D");
+  event_tree->Branch("t_inv_mass",            &t_inv_mass,            "t_inv_mass/D");
+  event_tree->Branch("t_nu_lepton_angle",     &t_nu_lepton_angle,     "t_nu_lepton_angle/D");
+  event_tree->Branch("t_vertex_energy",       &t_vertex_energy,       "t_vertex_energy/D");
+  event_tree->Branch("r_particles",           &r_particles,           "r_particles/I");
+  event_tree->Branch("r_tracks",              &r_tracks,              "r_tracks/I");
+  event_tree->Branch("r_showers",             &r_showers,             "r_showers/I");
+  event_tree->Branch("r_vertex",              &r_vertex,              "r_vertex[3]/D");
 
   // MCParticle tree branches
+  // Variables associated with mcparticle_tree
+  mcparticle_tree->Branch("event_id",              &event_id,              "event_id/I");
+  mcparticle_tree->Branch("p_pdgcode",             &p_pdgcode,             "p_pdgcode/I");
+  mcparticle_tree->Branch("p_vertex",              &p_vertex,              "p_vertex[3]/D");
+  mcparticle_tree->Branch("p_end",                 &p_end,                 "p_end[3]/D");
+  mcparticle_tree->Branch("p_momentum",            &p_momentum,            "p_momentum[3]/D");
+  mcparticle_tree->Branch("p_energy",              &p_energy,              "p_energy/D");
+  mcparticle_tree->Branch("p_mass",                &p_mass,                "p_mass/D");
+  mcparticle_tree->Branch("p_transverse_momentum", &p_transverse_momentum, "p_transverse_momentum/D");
+  mcparticle_tree->Branch("p_momentum_magnitude",  &p_momentum_magnitude,  "p_momentum_magnitude/D");
 
+  // Variables associated with recotrack_tree
+  double tr_pida, tr_chi2_mu, tr_chi2_pi, tr_chi2_pr, tr_chi2_ka;
+  double tr_vertex[3], tr_end[3], tr_dedx[dedx_size], tr_residual_range[residual_range_size];
+  double tr_length, tr_kinetic_energy, tr_range, tr_missing_energy;
+
+  // Variables associated with recoshower_tree
+  double sh_start[3], sh_direction[3], sh_length, sh_open_angle;
+  
   // Reco Track tree branches
   
   // Reco Shower tree branches
@@ -491,6 +567,8 @@ void pndr::AnalysisNTuple::endJob()
   TFile file("/sbnd/app/users/rsjones/LArSoft_v06_63_00/LArSoft-v06_63_00/srcs/recoparameters/recoparameters/output_files/tree_test.root", "RECREATE");
   event_tree->Write();
   mcparticle_tree->Write();
+  recotrack_tree->Write();
+  recoshower_tree->Write();
   file.Write();
   file.Close();
 
