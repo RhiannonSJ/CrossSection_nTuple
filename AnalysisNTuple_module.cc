@@ -45,6 +45,7 @@
 
 #include <sstream>
 #include <cmath>
+#include <ctime>
 #include <vector>
 #include <string>
 #include <iostream>
@@ -107,6 +108,7 @@ private:
   // Variables associated with event_tree
   // Universal
   int event_id;
+  std::time_t time_now;
 
   // Truth
   int t_nu_pdgcode, t_interaction;
@@ -126,8 +128,9 @@ private:
   double p_energy, p_mass, p_transverse_momentum, p_momentum_magnitude;
 
   // Variables associated with recotrack_tree
+  unsigned int tr_dedx_size, tr_residual_range_size;
   double tr_pida, tr_chi2_mu, tr_chi2_pi, tr_chi2_pr, tr_chi2_ka;
-  double tr_vertex[3], tr_end[3], tr_dedx[dedx_size], tr_residual_range[residual_range_size];
+  double tr_vertex[3], tr_end[3], tr_dedx[100000], tr_residual_range[100000];
   double tr_length, tr_kinetic_energy, tr_range, tr_missing_energy;
 
   // Variables associated with recoshower_tree
@@ -266,6 +269,10 @@ void pndr::AnalysisNTuple::analyze(art::Event const & e)
       // Add one to the event counter
       event_id += 1;
 
+      // Get current time stamp
+      time_now = std::time(nullptr);
+
+
       // Set array to be current vertex position
       vtx_assn[0]->XYZ(r_vertex);
       
@@ -280,6 +287,8 @@ void pndr::AnalysisNTuple::analyze(art::Event const & e)
 
       if(trk_handle.isValid() && trk_size) {
       
+        art::FindMany< anab::Calorimetry  > fmcal( trk_handle, e, "pmatrackcalo" );
+        art::FindMany< anab::ParticleID   > fmpid( trk_handle, e, "chi2pid" );
         // Loop over PMA tracks and find any within 2 cm of the primary vertex
         // count them
         for(int i = 0; i < trk_size; ++i) {
@@ -350,7 +359,63 @@ void pndr::AnalysisNTuple::analyze(art::Event const & e)
             n_primary_tracks++;
 
             // Get the track-based variables
+            std::vector<const anab::Calorimetry*> cal_assn = fmcal.at(i);
+            std::vector<const anab::ParticleID* > pid_assn = fmpid.at(i);
+     
+            // Loop over PID association
+            for ( size_t j = 0; j < pid_assn.size(); ++j ){
 
+              if (!pid_assn[j]) continue;
+              if (!pid_assn[j]->PlaneID().isValid) continue;
+                
+              // Get the plane number
+              int planenum = pid_assn[j]->PlaneID().Plane;
+
+              // Only look at the collection plane, since this is where the dEdx
+              // is acquired and we need this for the PIDA values
+              if (planenum!=2) continue;
+                
+              // Loop over cal association
+              for ( size_t k = 0; k < cal_assn.size(); ++k ){
+
+                if (!cal_assn[k]) continue;
+                if (!cal_assn[k]->PlaneID().isValid) continue;
+                  
+                // Get the plane number
+                int planenumcal = cal_assn[k]->PlaneID().Plane;
+
+                // Only look at the collection plane, since this is where the dEdx
+                // is acquired and we need this for the PIDA values
+                if (planenumcal!=2) continue;
+
+                tr_chi2_pr        = pid_assn[j]->Chi2Proton();
+                tr_chi2_mu        = pid_assn[j]->Chi2Muon();
+                tr_chi2_pi        = pid_assn[j]->Chi2Pion();
+                tr_chi2_ka        = pid_assn[j]->Chi2Kaon();
+                tr_pida           = pid_assn[j]->PIDA();
+                tr_missing_energy = pid_assn[j]->MissingE();
+
+                tr_kinetic_energy      = cal_assn[k]->KineticEnergy();
+                tr_range               = cal_assn[k]->Range();
+                tr_dedx_size           = cal_assn[k]->dEdx().size();
+                tr_residual_range_size = cal_assn[k]->ResidualRange().size();
+                for(unsigned int l = 0; l < tr_dedx_size; ++l) tr_dedx[l]                     = cal_assn[k]->dEdx()[l];
+                for(unsigned int l = 0; l < tr_residual_range_size; ++l) tr_residual_range[l] = cal_assn[k]->ResidualRange()[l];
+
+                tr_vertex[0] = track_vtx_x;
+                tr_vertex[1] = track_vtx_y;
+                tr_vertex[2] = track_vtx_z;
+                
+                tr_end[0] = track_end_x;
+                tr_end[1] = track_end_y;
+                tr_end[2] = track_end_z;
+
+                tr_length = trk->Length();
+
+                recotrack_tree->Fill();
+
+              }
+            }
           }
         } 
       }
@@ -373,6 +438,16 @@ void pndr::AnalysisNTuple::analyze(art::Event const & e)
             // Add one to the counter for the event tree
             n_primary_showers++;
 
+            sh_start[0]     =     shw->ShowerStart()[0];
+            sh_start[1]     =     shw->ShowerStart()[1];
+            sh_start[2]     =     shw->ShowerStart()[2];
+            sh_direction[0] =     shw->Direction()[0];
+            sh_direction[1] =     shw->Direction()[1];
+            sh_direction[2] =     shw->Direction()[2];
+            sh_length       =     shw->Length();
+            sh_open_angle   =     shw->OpenAngle();
+  
+            recoshower_tree->Fill();
           }
         }
       }
@@ -486,6 +561,7 @@ void pndr::AnalysisNTuple::beginJob()
 
   // Event tree branches
   event_tree->Branch("event_id",              &event_id,              "event_id/I");
+  event_tree->Branch("time_now",              &time_now,              "time_now/I");
   event_tree->Branch("t_nu_pdgcode",          &t_nu_pdgcode,          "t_nu_pdgcode/I");
   event_tree->Branch("t_iscc",                &t_iscc,                "t_iscc/O");
   event_tree->Branch("t_interaction",         &t_interaction,         "t_interaction/I");
@@ -515,6 +591,7 @@ void pndr::AnalysisNTuple::beginJob()
   // MCParticle tree branches
   // Variables associated with mcparticle_tree
   mcparticle_tree->Branch("event_id",              &event_id,              "event_id/I");
+  mcparticle_tree->Branch("time_now",              &time_now,              "time_now/I");
   mcparticle_tree->Branch("p_pdgcode",             &p_pdgcode,             "p_pdgcode/I");
   mcparticle_tree->Branch("p_vertex",              &p_vertex,              "p_vertex[3]/D");
   mcparticle_tree->Branch("p_end",                 &p_end,                 "p_end[3]/D");
@@ -523,20 +600,35 @@ void pndr::AnalysisNTuple::beginJob()
   mcparticle_tree->Branch("p_mass",                &p_mass,                "p_mass/D");
   mcparticle_tree->Branch("p_transverse_momentum", &p_transverse_momentum, "p_transverse_momentum/D");
   mcparticle_tree->Branch("p_momentum_magnitude",  &p_momentum_magnitude,  "p_momentum_magnitude/D");
-
-  // Variables associated with recotrack_tree
-  double tr_pida, tr_chi2_mu, tr_chi2_pi, tr_chi2_pr, tr_chi2_ka;
-  double tr_vertex[3], tr_end[3], tr_dedx[dedx_size], tr_residual_range[residual_range_size];
-  double tr_length, tr_kinetic_energy, tr_range, tr_missing_energy;
-
-  // Variables associated with recoshower_tree
-  double sh_start[3], sh_direction[3], sh_length, sh_open_angle;
   
   // Reco Track tree branches
+  recotrack_tree->Branch("event_id",               &event_id,               "event_id/I");
+  recotrack_tree->Branch("time_now",              &time_now,              "time_now/I");
+  recotrack_tree->Branch("tr_dedx_size",           &tr_dedx_size,           "tr_dedx_size/i");
+  recotrack_tree->Branch("tr_residual_range_size", &tr_residual_range_size, "tr_residual_range_size/i");
+  recotrack_tree->Branch("tr_pida",                &tr_pida,                "tr_pida/D");
+  recotrack_tree->Branch("tr_chi2_mu",             &tr_chi2_mu,             "tr_chi2_mu/D");
+  recotrack_tree->Branch("tr_chi2_pi",             &tr_chi2_pi,             "tr_chi2_pi/D");
+  recotrack_tree->Branch("tr_chi2_pr",             &tr_chi2_pr,             "tr_chi2_pr/D");
+  recotrack_tree->Branch("tr_chi2_ka",             &tr_chi2_ka,             "tr_chi2_ka/D");
+  recotrack_tree->Branch("tr_vertex",              &tr_vertex,              "tr_vertex[3]/D");
+  recotrack_tree->Branch("tr_end",                 &tr_end,                 "tr_end[3]/D");
+  recotrack_tree->Branch("tr_dedx",                &tr_dedx,                ("tr_dedx[" + std::to_string(100000)+"]/D").c_str());
+  recotrack_tree->Branch("tr_residual_range",      &tr_residual_range,      ("tr_residual_range[" + std::to_string(100000)+"]/D").c_str());
+  recotrack_tree->Branch("tr_length",              &tr_length,              "tr_length/D");
+  recotrack_tree->Branch("tr_range",               &tr_range,               "tr_range/D");
+  recotrack_tree->Branch("tr_kinetic_energy",      &tr_kinetic_energy,      "tr_kinetic_energy/D");
+  recotrack_tree->Branch("tr_missing_energy",      &tr_missing_energy,      "tr_missing_energy/D");
   
   // Reco Shower tree branches
+  recoshower_tree->Branch("event_id",         &event_id,               "event_id/I");
+  recoshower_tree->Branch("time_now",              &time_now,              "time_now/I");
+  recoshower_tree->Branch("sh_start",         &sh_start,               "sh_start[3]/D");
+  recoshower_tree->Branch("sh_direction",     &sh_direction,           "sh_direction[3]/D");
+  recoshower_tree->Branch("sh_length",        &sh_length,              "sh_length/D");
+  recoshower_tree->Branch("sh_open_angle",    &sh_open_angle,          "sh_open_angle/D");
 
-  
+  // Set directories
   event_tree->SetDirectory(0);
   mcparticle_tree->SetDirectory(0);
   recotrack_tree->SetDirectory(0);
