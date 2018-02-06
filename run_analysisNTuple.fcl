@@ -1,5 +1,4 @@
 #include "analysisNTuple.fcl"
-
 process_name: AnalysisNTuple      #The process name must NOT contain any underscores
 
 source: 

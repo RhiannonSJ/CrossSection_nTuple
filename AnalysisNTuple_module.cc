@@ -100,7 +100,8 @@ private:
   float m_selectedBorderZ;
 
   // Counters
-  int all_events, fiducial_events;
+  int all_events, fiducial_events, contained_fiducial_event;
+  int pfparticle, primary_pfparticle;
 
   // ROOT
   TTree *event_tree, *mcparticle_tree, *recotrack_tree, *recoshower_tree;
@@ -151,6 +152,12 @@ pndr::AnalysisNTuple::AnalysisNTuple(fhicl::ParameterSet const & p)
 
 void pndr::AnalysisNTuple::analyze(art::Event const & e)
 {
+  
+  // Add one to the event counter
+  event_id += 1;
+
+  // Get current time stamp
+  time_now = std::time(nullptr);
   
   all_events++;
 
@@ -206,11 +213,11 @@ void pndr::AnalysisNTuple::analyze(art::Event const & e)
     art::Handle< std::vector< simb::MCTruth > > mct_handle;
     e.getByLabel("generator", mct_handle );
     int mct_size = mct_handle->size();
-  
+ 
     art::Handle< std::vector< recob::Track > > trk_handle;
-    e.getByLabel("pmalgtrackmaker", trk_handle );
-  int trk_size = trk_handle->size();
-   
+    e.getByLabel("pandoraNu", trk_handle );
+//    int trk_size = trk_handle->size();
+    
     art::Handle< std::vector< recob::Shower > > shw_handle;
     e.getByLabel("pandoraNu", shw_handle );
     int shw_size = shw_handle->size();
@@ -265,159 +272,174 @@ void pndr::AnalysisNTuple::analyze(art::Event const & e)
 
       if(vtx_assn.size()  > 1) return;
       if(vtx_assn.size() == 0) return;
-
+/*
       // Add one to the event counter
       event_id += 1;
 
       // Get current time stamp
       time_now = std::time(nullptr);
-
+*/
 
       // Set array to be current vertex position
       vtx_assn[0]->XYZ(r_vertex);
       
+      // Get track associations with PFParticles from Pandora
+      art::FindMany< recob::Track  > fmtrk( pfp_handle, e, "pandoraNu" );
+
       // Find the number of reconstructed primary final state particles 
-      for(int i = 0; i < pfp_size; ++i) {
+      for(int k = 0; k < pfp_size; ++k) {
     
-        art::Ptr< recob::PFParticle > pfp( pfp_handle, i );
+        art::Ptr< recob::PFParticle > pfp( pfp_handle, k );
 
-        if(neutrino_id == pfp->Parent()) n_primaries++;
-      
-      }
+        pfparticle++;
 
-      if(trk_handle.isValid() && trk_size) {
+        // If the PFParticle is no a primary, continue
+        if(neutrino_id != pfp->Parent()) continue;
+       
+        // Counter for all jobs
+        primary_pfparticle++;
+
+        // For primary PFParticles get associated tracks and their calorimetry
+        n_primaries++;
       
-        art::FindMany< anab::Calorimetry  > fmcal( trk_handle, e, "pmatrackcalo" );
-        art::FindMany< anab::ParticleID   > fmpid( trk_handle, e, "chi2pid" );
-        // Loop over PMA tracks and find any within 2 cm of the primary vertex
-        // count them
-        for(int i = 0; i < trk_size; ++i) {
+        std::vector<const recob::Track*> trk_assn = fmtrk.at(k);
+
+        if(trk_assn.size()) {
         
-          art::Ptr< recob::Track > trk( trk_handle, i );
-         
-          float track_vtx_x = trk->Vertex()[0];
-          float track_vtx_y = trk->Vertex()[1];
-          float track_vtx_z = trk->Vertex()[2];
-          float track_end_x = trk->End()[0];
-          float track_end_y = trk->End()[1];
-          float track_end_z = trk->End()[2];
+          art::FindMany< anab::Calorimetry  > fmcal( trk_handle, e, "pandoraNucalo" );
+          art::FindMany< anab::ParticleID   > fmpid( trk_handle, e, "pandoraNupid" );
           
-          // Find the distance of the current track's vertex and end point from 
-          // the primary vertex location
-          // If the end point is closer, the track was reconstructed the wrong way around
-          double s_vtx = sqrt(pow(track_vtx_x - r_vertex[0],2) + pow(track_vtx_y - r_vertex[1],2) + pow(track_vtx_z - r_vertex[2],2));
-          double s_end = sqrt(pow(track_end_x - r_vertex[0],2) + pow(track_end_y - r_vertex[1],2) + pow(track_end_z - r_vertex[2],2));
-
-          // If the end is closer than the vertex, flip the track
-          bool should_flip = s_end < s_vtx;
-
-          // If we should flip the track, define the end to be the start and the start to be the end
-          // recalculate the distance between the vertex and the track vertex
-          if(should_flip){
+          // Loop over tracks associated with primary PFParticles
+          for(size_t i = 0; i < trk_assn.size(); ++i) {
           
-            // Temporary doubles to hold the will-be end points
-            double temp_end_x = track_vtx_x; 
-            double temp_end_y = track_vtx_y; 
-            double temp_end_z = track_vtx_z; 
-
-            track_vtx_x = track_end_x;
-            track_vtx_y = track_end_y;
-            track_vtx_z = track_end_z;
             
-            track_end_x = temp_end_x;
-            track_end_y = temp_end_y;
-            track_end_z = temp_end_z;
+            //art::Ptr< recob::Track > trk( trk_handle, i );
+           
+            float track_vtx_x = trk_assn[i]->Vertex()[0];
+            float track_vtx_y = trk_assn[i]->Vertex()[1];
+            float track_vtx_z = trk_assn[i]->Vertex()[2];
+            float track_end_x = trk_assn[i]->End()[0];
+            float track_end_y = trk_assn[i]->End()[1];
+            float track_end_z = trk_assn[i]->End()[2];
+            /*
+            // Find the distance of the current track's vertex and end point from 
+            // the primary vertex location
+            // If the end point is closer, the track was reconstructed the wrong way around
+            double s_vtx = sqrt(pow(track_vtx_x - r_vertex[0],2) + pow(track_vtx_y - r_vertex[1],2) + pow(track_vtx_z - r_vertex[2],2));
+            double s_end = sqrt(pow(track_end_x - r_vertex[0],2) + pow(track_end_y - r_vertex[1],2) + pow(track_end_z - r_vertex[2],2));
 
-            s_vtx = sqrt(pow(track_vtx_x - r_vertex[0],2) + pow(track_vtx_y - r_vertex[1],2) + pow(track_vtx_z - r_vertex[2],2));
-          
-          }
+            // If the end is closer than the vertex, flip the track
+            bool should_flip = s_end < s_vtx;
 
-          // If the track is the right way around and the vertex is within 2cm of 
-          // the primary vertex location, add a counter to the number of primary tracks
-          // Or if the track is the wrong way around and the end is within 10cm of the
-          // primary vertex location, add a counter to the number of primary tracks
-          if(s_vtx > 10) continue;
+            // If we should flip the track, define the end to be the start and the start to be the end
+            // recalculate the distance between the vertex and the track vertex
+            if(should_flip){
             
-          // Check that the primary track's start and end position is within the detector volume
-          if (    (track_vtx_x > (m_detectorHalfLengthX - m_coordinateOffsetX - m_selectedBorderX)) 
-               || (track_vtx_x < (-m_coordinateOffsetX + m_selectedBorderX)) 
-               || (track_vtx_y > (m_detectorHalfLengthY - m_coordinateOffsetY - m_selectedBorderY)) 
-               || (track_vtx_y < (-m_coordinateOffsetY + m_selectedBorderY)) 
-               || (track_vtx_z > (m_detectorHalfLengthZ - m_coordinateOffsetZ - m_selectedBorderZ)) 
-               || (track_vtx_z < (-m_coordinateOffsetZ + m_selectedBorderZ))
-               || (track_end_x > (m_detectorHalfLengthX - m_coordinateOffsetX - m_selectedBorderX)) 
-               || (track_end_x < (-m_coordinateOffsetX + m_selectedBorderX)) 
-               || (track_end_y > (m_detectorHalfLengthY - m_coordinateOffsetY - m_selectedBorderY)) 
-               || (track_end_y < (-m_coordinateOffsetY + m_selectedBorderY)) 
-               || (track_end_z > (m_detectorHalfLengthZ - m_coordinateOffsetZ - m_selectedBorderZ)) 
-               || (track_end_z < (-m_coordinateOffsetZ + m_selectedBorderZ))) continue;
+              // Temporary doubles to hold the will-be end points
+              double temp_end_x = track_vtx_x; 
+              double temp_end_y = track_vtx_y; 
+              double temp_end_z = track_vtx_z; 
+
+              track_vtx_x = track_end_x;
+              track_vtx_y = track_end_y;
+              track_vtx_z = track_end_z;
+              
+              track_end_x = temp_end_x;
+              track_end_y = temp_end_y;
+              track_end_z = temp_end_z;
+
+              s_vtx = sqrt(pow(track_vtx_x - r_vertex[0],2) + pow(track_vtx_y - r_vertex[1],2) + pow(track_vtx_z - r_vertex[2],2));
             
-          // Try and eliminate shower fragments
-          if(trk->Length() > 0.5) {
+            }
 
-            // Add one to the counter for the event tree
-            n_primary_tracks++;
+            // If the track is the right way around and the vertex is within 2cm of 
+            // the primary vertex location, add a counter to the number of primary tracks
+            // Or if the track is the wrong way around and the end is within 10cm of the
+            // primary vertex location, add a counter to the number of primary tracks
+            if(s_vtx > 10) continue;
+             */
 
-            // Get the track-based variables
-            std::vector<const anab::Calorimetry*> cal_assn = fmcal.at(i);
-            std::vector<const anab::ParticleID* > pid_assn = fmpid.at(i);
-     
-            // Loop over PID association
-            for ( size_t j = 0; j < pid_assn.size(); ++j ){
+            // Check that the primary track's start and end position is within the detector volume
+            if (    (track_vtx_x > (m_detectorHalfLengthX - m_coordinateOffsetX - m_selectedBorderX)) 
+                 || (track_vtx_x < (-m_coordinateOffsetX + m_selectedBorderX)) 
+                 || (track_vtx_y > (m_detectorHalfLengthY - m_coordinateOffsetY - m_selectedBorderY)) 
+                 || (track_vtx_y < (-m_coordinateOffsetY + m_selectedBorderY)) 
+                 || (track_vtx_z > (m_detectorHalfLengthZ - m_coordinateOffsetZ - m_selectedBorderZ)) 
+                 || (track_vtx_z < (-m_coordinateOffsetZ + m_selectedBorderZ))
+                 || (track_end_x > (m_detectorHalfLengthX - m_coordinateOffsetX - m_selectedBorderX)) 
+                 || (track_end_x < (-m_coordinateOffsetX + m_selectedBorderX)) 
+                 || (track_end_y > (m_detectorHalfLengthY - m_coordinateOffsetY - m_selectedBorderY)) 
+                 || (track_end_y < (-m_coordinateOffsetY + m_selectedBorderY)) 
+                 || (track_end_z > (m_detectorHalfLengthZ - m_coordinateOffsetZ - m_selectedBorderZ)) 
+                 || (track_end_z < (-m_coordinateOffsetZ + m_selectedBorderZ))) continue;
+              
+            // Try and eliminate shower fragments
+            //if(trk_assn[i]->Length() > 0.5) {
 
-              if (!pid_assn[j]) continue;
-              if (!pid_assn[j]->PlaneID().isValid) continue;
-                
-              // Get the plane number
-              int planenum = pid_assn[j]->PlaneID().Plane;
+              // Get the track-based variables
+              std::vector<const anab::Calorimetry*> cal_assn = fmcal.at(i);
+              std::vector<const anab::ParticleID* > pid_assn = fmpid.at(i);
+       
+              // Loop over PID association
+              for ( size_t j = 0; j < pid_assn.size(); ++j ){
 
-              // Only look at the collection plane, since this is where the dEdx
-              // is acquired and we need this for the PIDA values
-              if (planenum!=2) continue;
-                
-              // Loop over cal association
-              for ( size_t k = 0; k < cal_assn.size(); ++k ){
-
-                if (!cal_assn[k]) continue;
-                if (!cal_assn[k]->PlaneID().isValid) continue;
+                if (!pid_assn[j]) continue;
+                if (!pid_assn[j]->PlaneID().isValid) continue;
                   
                 // Get the plane number
-                int planenumcal = cal_assn[k]->PlaneID().Plane;
+                int planenum = pid_assn[j]->PlaneID().Plane;
 
                 // Only look at the collection plane, since this is where the dEdx
                 // is acquired and we need this for the PIDA values
-                if (planenumcal!=2) continue;
+                if (planenum!=2) continue;
+                  
+                // Loop over cal association
+                for ( size_t k = 0; k < cal_assn.size(); ++k ){
 
-                tr_chi2_pr        = pid_assn[j]->Chi2Proton();
-                tr_chi2_mu        = pid_assn[j]->Chi2Muon();
-                tr_chi2_pi        = pid_assn[j]->Chi2Pion();
-                tr_chi2_ka        = pid_assn[j]->Chi2Kaon();
-                tr_pida           = pid_assn[j]->PIDA();
-                tr_missing_energy = pid_assn[j]->MissingE();
+                  if (!cal_assn[k]) continue;
+                  if (!cal_assn[k]->PlaneID().isValid) continue;
+                    
+                  // Get the plane number
+                  int planenumcal = cal_assn[k]->PlaneID().Plane;
 
-                tr_kinetic_energy      = cal_assn[k]->KineticEnergy();
-                tr_range               = cal_assn[k]->Range();
-                tr_dedx_size           = cal_assn[k]->dEdx().size();
-                tr_residual_range_size = cal_assn[k]->ResidualRange().size();
-                for(unsigned int l = 0; l < tr_dedx_size; ++l) tr_dedx[l]                     = cal_assn[k]->dEdx()[l];
-                for(unsigned int l = 0; l < tr_residual_range_size; ++l) tr_residual_range[l] = cal_assn[k]->ResidualRange()[l];
+                  // Only look at the collection plane, since this is where the dEdx
+                  // is acquired and we need this for the PIDA values
+                  if (planenumcal!=2) continue;
 
-                tr_vertex[0] = track_vtx_x;
-                tr_vertex[1] = track_vtx_y;
-                tr_vertex[2] = track_vtx_z;
-                
-                tr_end[0] = track_end_x;
-                tr_end[1] = track_end_y;
-                tr_end[2] = track_end_z;
+                  // Add one to the counter for the event tree
+                  n_primary_tracks++;
 
-                tr_length = trk->Length();
+                  tr_chi2_pr        = pid_assn[j]->Chi2Proton();
+                  tr_chi2_mu        = pid_assn[j]->Chi2Muon();
+                  tr_chi2_pi        = pid_assn[j]->Chi2Pion();
+                  tr_chi2_ka        = pid_assn[j]->Chi2Kaon();
+                  tr_pida           = pid_assn[j]->PIDA();
+                  tr_missing_energy = pid_assn[j]->MissingE();
 
-                recotrack_tree->Fill();
+                  tr_kinetic_energy      = cal_assn[k]->KineticEnergy();
+                  tr_range               = cal_assn[k]->Range();
+                  tr_dedx_size           = cal_assn[k]->dEdx().size();
+                  tr_residual_range_size = cal_assn[k]->ResidualRange().size();
+                  for(unsigned int l = 0; l < tr_dedx_size; ++l) tr_dedx[l]                     = cal_assn[k]->dEdx()[l];
+                  for(unsigned int l = 0; l < tr_residual_range_size; ++l) tr_residual_range[l] = cal_assn[k]->ResidualRange()[l];
 
+                  tr_vertex[0] = track_vtx_x;
+                  tr_vertex[1] = track_vtx_y;
+                  tr_vertex[2] = track_vtx_z;
+                  
+                  tr_end[0] = track_end_x;
+                  tr_end[1] = track_end_y;
+                  tr_end[2] = track_end_z;
+
+                  tr_length = trk_assn[i]->Length();
+
+                  recotrack_tree->Fill();
+
+                }
               }
-            }
+            //}
           }
-        } 
+        }
       }
       if(shw_handle.isValid() && shw_size) {
       
@@ -458,7 +480,8 @@ void pndr::AnalysisNTuple::analyze(art::Event const & e)
       r_tracks    = n_primary_tracks;
       r_showers   = n_primary_showers; 
       r_particles = n_primaries;
-      
+
+      if(n_primary_tracks != 0) contained_fiducial_event++;
 // ------------------------------------------------------------------------------
 //                     EVENT-TREE TRUTH INFORMATION
 // ------------------------------------------------------------------------------
@@ -548,8 +571,11 @@ void pndr::AnalysisNTuple::beginJob()
 {
   // Implementation of optional member function here.
   // Initialise the counters
-  all_events      = 0;
-  fiducial_events = 0;
+  all_events               = 0;
+  fiducial_events          = 0;
+  contained_fiducial_event = 0;
+  pfparticle               = 0;
+  primary_pfparticle       = 0;
 
   event_id = 0;
 
@@ -644,19 +670,28 @@ void pndr::AnalysisNTuple::endJob()
   std::cout << "---------------------------------------------------------------------------------" << std::endl;
   std::cout << std::endl;
 
-  std::cout << " Total number of events                            : ";
+  std::cout << " Total number of events                               : ";
   std::cout << all_events;
   std::cout << std::endl;
 
-  std::cout << " Fraction of fiducial events with contained tracks : ";
-  std::cout << fiducial_events / double(all_events);
+  std::cout << " Percentage of events which are fiducial              : ";
+  std::cout << 100*(fiducial_events / double(all_events));
+  std::cout << std::endl;
+
+  std::cout << " Percentage of events with fiducial, contained tracks : ";
+  std::cout << 100*(contained_fiducial_event / double(all_events));
+  std::cout << std::endl;
+
+  std::cout << " Percentage of PFParticles that are primary           : ";
+  std::cout << 100*(primary_pfparticle / double(pfparticle));
   std::cout << std::endl;
 
   std::cout << "---------------------------------------------------------------------------------" << std::endl;
   std::cout << "=================================================================================" << std::endl;
 
   // Print the tree, write the file, close
-  TFile file("/sbnd/app/users/rsjones/LArSoft_v06_63_00/LArSoft-v06_63_00/srcs/recoparameters/recoparameters/output_files/tree_test.root", "RECREATE");
+  //TFile file("/sbnd/app/users/rsjones/LArSoft_v06_63_00/LArSoft-v06_63_00/srcs/recoparameters/recoparameters/output_files/output_file.root", "RECREATE");
+  TFile file("output_file.root", "RECREATE");
   event_tree->Write();
   mcparticle_tree->Write();
   recotrack_tree->Write();
