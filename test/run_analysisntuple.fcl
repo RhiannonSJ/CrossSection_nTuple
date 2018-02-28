@@ -13,8 +13,8 @@ rm -rf $WORKING_DIR/*
 cd $WORKING_DIR
 
 #lar -c run_analysisNTuple.fcl -S $TEST_SBND_PANDORA
-lar -c run_analysisNTuple.fcl -S $TEST_SBND_PANDORA_100
-#lar -c run_analysisNTuple.fcl -S $TEST_SBND_PANDORA_10
+#lar -c run_analysisNTuple.fcl -S $TEST_SBND_PANDORA_100
+lar -c run_analysisNTuple.fcl -S $TEST_SBND_PANDORA_10
 #lar -c run_analysisNTuple.fcl -s $TEST_SBND_PANDORA_1
 
 cd $PANDORA_DIR

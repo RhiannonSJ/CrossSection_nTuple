@@ -1,4 +1,7 @@
 #include "analysisNTuple.fcl"
+###include "backtrackerservice.fcl"
+###include "particleinventoryservice.fcl"
+
 process_name: AnalysisNTuple      #The process name must NOT contain any underscores
 
 source: 
@@ -7,7 +10,10 @@ source:
   maxEvents:   -1
 }
 
-#services: {
+services: {
+  #BackTrackerService:  @local::standard_backtrackerservice
+  #ParticleInventoryService: @local::standard_particleinventoryservice
+}
 #  scheduler:               { defaultExceptions: false }    # Make all uncaught exceptions fatal.
 #  TFileService: { fileName: "MyFilter.root" }
 #  Timing:       {}

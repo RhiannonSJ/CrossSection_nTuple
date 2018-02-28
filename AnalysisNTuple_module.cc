@@ -33,6 +33,8 @@
 #include "nusimdata/SimulationBase/MCTruth.h"
 #include "nusimdata/SimulationBase/MCNeutrino.h"
 #include "nusimdata/SimulationBase/MCParticle.h"
+//#include "larsim/MCCheater/BackTrackerService.h"
+//#include "larsim/MCCheater/ParticleInventoryService.h"
 #include "lardataobj/RecoBase/PFParticle.h"
 #include "lardataobj/RecoBase/Hit.h"
 #include "lardataobj/RecoBase/Vertex.h"
@@ -152,7 +154,10 @@ pndr::AnalysisNTuple::AnalysisNTuple(fhicl::ParameterSet const & p)
 
 void pndr::AnalysisNTuple::analyze(art::Event const & e)
 {
-  
+
+  //art::ServiceHandle<cheat::BackTrackerService> bt_serv;
+  //art::ServiceHandle<cheat::ParticleInventoryService> pi_serv;
+
   // Add one to the event counter
   event_id += 1;
 
@@ -528,6 +533,10 @@ void pndr::AnalysisNTuple::analyze(art::Event const & e)
         // ATTENTION: Cut on PGD codes which refer to elements (Argon39 and above) 
         // Only interested in the final state PARTICLES
         if(part->Process() != "primary" || part->PdgCode() >= 1000018039) continue;
+
+        std::cout << " Status code : " << part->StatusCode() << std::endl;
+
+        // if(part->StatusCode() != 1) continue;
   
         t_particles++;
 

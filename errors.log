@@ -1,0 +1,90 @@
+%MSG-w ColorDrawingOptions:  Early 21-Feb-2018 14:46:47 CST JobSetup
+only 1 value given for raw color scale: number of divisions, low and high values.
+Pad out those values for the number of signal types.
+%MSG
+%MSG-w ColorDrawingOptions:  Early 21-Feb-2018 14:46:47 CST JobSetup
+only 1 value given for reco color scale: number of divisions, low and high values.
+Pad out those values for the number of signal types.
+%MSG
+21-Feb-2018 14:46:47 CST  Initiating request to open input file "/pnfs/sbnd/persistent/users/rsjones/calo_pid_pandora/pandorareco/3758305_141/prodgenie_sbnd_GenieGen-20171018T120537_b0e54d20-a245-4ebd-8179-918e4fe7c29c_G4-20171018T141923_DetSim-20171018T165855_PandoraReco-20180206T010217.root"
+21-Feb-2018 14:46:51 CST  Opened input file "/pnfs/sbnd/persistent/users/rsjones/calo_pid_pandora/pandorareco/3758305_141/prodgenie_sbnd_GenieGen-20171018T120537_b0e54d20-a245-4ebd-8179-918e4fe7c29c_G4-20171018T141923_DetSim-20171018T165855_PandoraReco-20180206T010217.root"
+%MSG-w RecoBaseDrawer:  end_path PostProcessPath 21-Feb-2018 14:58:39 CST  run: 1 subRun: 87 event: 4342
+RecoBaseDrawer::GetVertices failed with message:
+---- ProductNotFound BEGIN
+  getByLabel: Found zero products matching all criteria
+  Looking for type: std::vector<recob::Vertex>
+  Looking for module label: pandoraNu
+  Looking for productInstanceName: kink
+---- ProductNotFound END
+
+%MSG
+%MSG-w RecoBaseDrawer:  end_path PostProcessPath 21-Feb-2018 14:58:39 CST  run: 1 subRun: 87 event: 4342
+RecoBaseDrawer::GetVertices failed with message:
+---- ProductNotFound BEGIN
+  getByLabel: Found zero products matching all criteria
+  Looking for type: std::vector<recob::Vertex>
+  Looking for module label: pandoraNu
+  Looking for productInstanceName: node
+---- ProductNotFound END
+
+%MSG
+%MSG-w RecoBaseDrawer:  end_path PostProcessPath 21-Feb-2018 14:58:40 CST  run: 1 subRun: 87 event: 4342
+RecoBaseDrawer::GetVertices failed with message:
+---- ProductNotFound BEGIN
+  getByLabel: Found zero products matching all criteria
+  Looking for type: std::vector<recob::Vertex>
+  Looking for module label: pandoraNu
+  Looking for productInstanceName: kink
+---- ProductNotFound END
+
+%MSG
+%MSG-w RecoBaseDrawer:  end_path PostProcessPath 21-Feb-2018 14:58:40 CST  run: 1 subRun: 87 event: 4342
+RecoBaseDrawer::GetVertices failed with message:
+---- ProductNotFound BEGIN
+  getByLabel: Found zero products matching all criteria
+  Looking for type: std::vector<recob::Vertex>
+  Looking for module label: pandoraNu
+  Looking for productInstanceName: node
+---- ProductNotFound END
+
+%MSG
+%MSG-w RecoBaseDrawer:  end_path PostProcessPath 21-Feb-2018 14:58:40 CST  run: 1 subRun: 87 event: 4342
+RecoBaseDrawer::GetVertices failed with message:
+---- ProductNotFound BEGIN
+  getByLabel: Found zero products matching all criteria
+  Looking for type: std::vector<recob::Vertex>
+  Looking for module label: pandoraNu
+  Looking for productInstanceName: kink
+---- ProductNotFound END
+
+%MSG
+%MSG-w RecoBaseDrawer:  end_path PostProcessPath 21-Feb-2018 14:58:40 CST  run: 1 subRun: 87 event: 4342
+RecoBaseDrawer::GetVertices failed with message:
+---- ProductNotFound BEGIN
+  getByLabel: Found zero products matching all criteria
+  Looking for type: std::vector<recob::Vertex>
+  Looking for module label: pandoraNu
+  Looking for productInstanceName: node
+---- ProductNotFound END
+
+%MSG
+%MSG-w RecoBaseDrawer:  end_path PostProcessPath 21-Feb-2018 14:58:40 CST  run: 1 subRun: 87 event: 4342
+RecoBaseDrawer::GetVertices failed with message:
+---- ProductNotFound BEGIN
+  getByLabel: Found zero products matching all criteria
+  Looking for type: std::vector<recob::Vertex>
+  Looking for module label: pandoraNu
+  Looking for productInstanceName: kink
+---- ProductNotFound END
+
+%MSG
+%MSG-w RecoBaseDrawer:  end_path PostProcessPath 21-Feb-2018 14:58:40 CST  run: 1 subRun: 87 event: 4342
+RecoBaseDrawer::GetVertices failed with message:
+---- ProductNotFound BEGIN
+  getByLabel: Found zero products matching all criteria
+  Looking for type: std::vector<recob::Vertex>
+  Looking for module label: pandoraNu
+  Looking for productInstanceName: node
+---- ProductNotFound END
+
+%MSG
