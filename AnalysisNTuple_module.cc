@@ -83,7 +83,7 @@ public:
   // Selected optional functions.
   void beginJob() override;
   void endJob() override;
-  void reconfigure(fhicl::ParameterSet const & p) override;
+  void reconfigure(fhicl::ParameterSet const & p);
 
 private:
 
@@ -176,16 +176,6 @@ void pndr::AnalysisNTuple::analyze(art::Event const & e)
   e.getByLabel("generator", mct_handle );
   int mct_size = mct_handle->size();
  
-  // Get tracks and check they remain in the fiducial volume 
-  art::Handle< std::vector< recob::Track > > trk_handle;
-  e.getByLabel("pmalgtrackmaker", trk_handle );
- 
-  /*
-  art::Handle< std::vector< recob::Shower > > shw_handle;
-  e.getByLabel("pandoraNu", shw_handle );
-  int shw_size = shw_handle->size();
-  */
-
   if(mct_handle.isValid() && mct_size) { 
   
     // Loop over the truth info
@@ -220,15 +210,15 @@ void pndr::AnalysisNTuple::analyze(art::Event const & e)
     int mct_size = mct_handle->size();
  
     art::Handle< std::vector< recob::Track > > trk_handle;
-    e.getByLabel("pandoraNu", trk_handle );
+    e.getByLabel("pandoraTrack", trk_handle );
 //    int trk_size = trk_handle->size();
     
     art::Handle< std::vector< recob::Shower > > shw_handle;
-    e.getByLabel("pandoraNu", shw_handle );
+    e.getByLabel("pandoraShower", shw_handle );
     int shw_size = shw_handle->size();
 
     art::Handle< std::vector< recob::PFParticle > > pfp_handle;
-    e.getByLabel("pandoraNu", pfp_handle );
+    e.getByLabel("pandora", pfp_handle );
     int pfp_size = pfp_handle->size();
     
 // ------------------------------------------------------------------------------
@@ -272,7 +262,7 @@ void pndr::AnalysisNTuple::analyze(art::Event const & e)
       if(!neutrino_found) return;
 
       // Get vertex association
-      art::FindMany< recob::Vertex  > fvtx( pfp_handle, e, "pandoraNu" );
+      art::FindMany< recob::Vertex  > fvtx( pfp_handle, e, "pandora" );
       std::vector<const recob::Vertex*> vtx_assn = fvtx.at(neutrino_id);
 
       if(vtx_assn.size()  > 1) return;
@@ -289,7 +279,7 @@ void pndr::AnalysisNTuple::analyze(art::Event const & e)
       vtx_assn[0]->XYZ(r_vertex);
       
       // Get track associations with PFParticles from Pandora
-      art::FindMany< recob::Track  > fmtrk( pfp_handle, e, "pandoraNu" );
+      art::FindMany< recob::Track  > fmtrk( pfp_handle, e, "pandoraTrack" );
 
       // Find the number of reconstructed primary final state particles 
       for(int k = 0; k < pfp_size; ++k) {
@@ -311,8 +301,8 @@ void pndr::AnalysisNTuple::analyze(art::Event const & e)
 
         if(trk_assn.size()) {
         
-          art::FindMany< anab::Calorimetry  > fmcal( trk_handle, e, "pandoraNucalo" );
-          art::FindMany< anab::ParticleID   > fmpid( trk_handle, e, "pandoraNupid" );
+          art::FindMany< anab::Calorimetry  > fmcal( trk_handle, e, "pandoraCalo" );
+          art::FindMany< anab::ParticleID   > fmpid( trk_handle, e, "pandoraPid" );
           
           // Loop over tracks associated with primary PFParticles
           for(size_t i = 0; i < trk_assn.size(); ++i) {
@@ -657,7 +647,7 @@ void pndr::AnalysisNTuple::beginJob()
   
   // Reco Shower tree branches
   recoshower_tree->Branch("event_id",         &event_id,               "event_id/I");
-  recoshower_tree->Branch("time_now",              &time_now,              "time_now/I");
+  recoshower_tree->Branch("time_now",         &time_now,              "time_now/I");
   recoshower_tree->Branch("sh_start",         &sh_start,               "sh_start[3]/D");
   recoshower_tree->Branch("sh_direction",     &sh_direction,           "sh_direction[3]/D");
   recoshower_tree->Branch("sh_length",        &sh_length,              "sh_length/D");
@@ -699,8 +689,8 @@ void pndr::AnalysisNTuple::endJob()
   std::cout << "=================================================================================" << std::endl;
 
   // Print the tree, write the file, close
-  //TFile file("/sbnd/app/users/rsjones/LArSoft_v06_63_00/LArSoft-v06_63_00/srcs/recoparameters/recoparameters/output_files/output_file.root", "RECREATE");
-  TFile file("output_file.root", "RECREATE");
+  TFile file("/sbnd/app/users/rsjones/LArSoft_v06_69_00/LArSoft-v06_69_00/srcs/analysistree/analysistree/output_files/output_file.root", "RECREATE");
+  //TFile file("output_file.root", "RECREATE");
   event_tree->Write();
   mcparticle_tree->Write();
   recotrack_tree->Write();

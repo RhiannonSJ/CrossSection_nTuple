@@ -1,6 +1,6 @@
 #!/bin/bash
 
-export FHICL_DIR=/sbnd/app/users/rsjones/LArSoft_v06_63_00/LArSoft-v06_63_00/srcs/recoparameters/recoparameters
+export FHICL_DIR=/sbnd/app/users/rsjones/LArSoft_v06_69_00/LArSoft-v06_69_00/srcs/recoparameters/recoparameters
 cd $MRB_BUILDDIR
 mrbsetenv
 mrb i -j4

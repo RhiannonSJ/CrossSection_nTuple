@@ -1,20 +1,14 @@
 #!/bin/bash
 
-WORKING_DIR=/sbnd/app/users/rsjones/LArSoft_v06_63_00/LArSoft-v06_63_00/srcs/recoparameters/recoparameters/working_dir
-PANDORA_DIR=/sbnd/app/users/rsjones/LArSoft_v06_63_00/LArSoft-v06_63_00/srcs/recoparameters/recoparameters
+WORKING_DIR=/sbnd/app/users/rsjones/LArSoft_v06_69_00/LArSoft-v06_69_00/srcs/analysistree/analysistree/working_dir
+PANDORA_DIR=/sbnd/app/users/rsjones/LArSoft_v06_69_00/LArSoft-v06_69_00/srcs/analysistree/analysistree
 
-TEST_SBND_PANDORA=/pnfs/sbnd/persistent/users/rsjones/reco_pid_calo_pandora_all.txt
-TEST_SBND_PANDORA_100=/pnfs/sbnd/persistent/users/rsjones/reco_pid_calo_pandora_100.txt
-TEST_SBND_PANDORA_10=/pnfs/sbnd/persistent/users/rsjones/reco_pid_calo_pandora_10.txt
-TEST_SBND_PANDORA_1=/pnfs/sbnd/persistent/users/rsjones/calo_pid_pandora/pandorareco/3466323_0/prodgenie_sbnd_GenieGen-20171018T120545_2ed084a1-1d0f-4524-99c9-daf3ee965625_G4-20171018T141423_DetSim-20171018T165210_PandoraReco-20180205T182909.root
+TEST_SBND_PANDORA=/sbnd/app/users/rsjones/LArSoft_v06_69_00/test/1_file.root
 
 rm -rf $WORKING_DIR/*
 
 cd $WORKING_DIR
 
-#lar -c run_analysisNTuple.fcl -S $TEST_SBND_PANDORA
-#lar -c run_analysisNTuple.fcl -S $TEST_SBND_PANDORA_100
-lar -c run_analysisNTuple.fcl -S $TEST_SBND_PANDORA_10
-#lar -c run_analysisNTuple.fcl -s $TEST_SBND_PANDORA_1
+lar -c run_analysisNTuple.fcl -s $TEST_SBND_PANDORA
 
 cd $PANDORA_DIR
