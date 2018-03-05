@@ -1,6 +1,6 @@
 #!/bin/bash
 
-export FHICL_DIR=/sbnd/app/users/rsjones/LArSoft_v06_69_00/LArSoft-v06_70_00/srcs/analysistree/analysistree
+export FHICL_DIR=${MRB_SOURCE}/analysistree/analysistree
 cd $MRB_BUILDDIR
 mrbsetenv
 mrb i -j4
