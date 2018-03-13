@@ -1,0 +1,23 @@
+13-Mar-2018 11:24:03 CDT  Initiating request to open input file "/pnfs/sbnd/scratch/users/rsjones/calo_pid_pandora/reco/4391193_0/prodgenie_sbnd_GenieGen-20171018T120545_2ed084a1-1d0f-4524-99c9-daf3ee965625_G4-20171018T141423_DetSim-20171018T165210_Reco-20180306T181558.root"
+13-Mar-2018 11:24:04 CDT  Opened input file "/pnfs/sbnd/scratch/users/rsjones/calo_pid_pandora/reco/4391193_0/prodgenie_sbnd_GenieGen-20171018T120545_2ed084a1-1d0f-4524-99c9-daf3ee965625_G4-20171018T141423_DetSim-20171018T165210_Reco-20180306T181558.root"
+13-Mar-2018 11:24:08 CDT  Closed input file "/pnfs/sbnd/scratch/users/rsjones/calo_pid_pandora/reco/4391193_0/prodgenie_sbnd_GenieGen-20171018T120545_2ed084a1-1d0f-4524-99c9-daf3ee965625_G4-20171018T141423_DetSim-20171018T165210_Reco-20180306T181558.root"
+13-Mar-2018 11:24:08 CDT  Initiating request to open input file "/pnfs/sbnd/scratch/users/rsjones/calo_pid_pandora/reco/4391193_1/prodgenie_sbnd_GenieGen-20171018T120539_e7e58f3a-459f-45f9-9ce1-d4bcc8a6ab82_G4-20171018T141654_DetSim-20171018T165226_Reco-20180306T183750.root"
+13-Mar-2018 11:24:08 CDT  Opened input file "/pnfs/sbnd/scratch/users/rsjones/calo_pid_pandora/reco/4391193_1/prodgenie_sbnd_GenieGen-20171018T120539_e7e58f3a-459f-45f9-9ce1-d4bcc8a6ab82_G4-20171018T141654_DetSim-20171018T165226_Reco-20180306T183750.root"
+13-Mar-2018 11:24:09 CDT  Closed input file "/pnfs/sbnd/scratch/users/rsjones/calo_pid_pandora/reco/4391193_1/prodgenie_sbnd_GenieGen-20171018T120539_e7e58f3a-459f-45f9-9ce1-d4bcc8a6ab82_G4-20171018T141654_DetSim-20171018T165226_Reco-20180306T183750.root"
+
+============================================================================================================================
+TimeTracker printout (sec)                    Min           Avg           Max         Median          RMS         nEvts   
+============================================================================================================================
+Full event                                0.000553991   0.00465093     0.0359363    0.00091802    0.00739822       100    
+----------------------------------------------------------------------------------------------------------------------------
+source:RootInput(read)                    0.000370021   0.000588773   0.00610093    0.000531703   0.000560837      100    
+end_path:analysisNTuple:AnalysisNTuple    0.000110518   0.00399714     0.0353309    0.000283003   0.00734404       100    
+============================================================================================================================
+
+====================================================================================================
+MemoryTracker summary (base-10 MB units used)
+
+  Peak virtual memory usage (VmPeak)  : 1256.67 MB
+  Peak resident set size usage (VmHWM): 583.881 MB
+  Details saved in: 'memory.db'
+====================================================================================================
