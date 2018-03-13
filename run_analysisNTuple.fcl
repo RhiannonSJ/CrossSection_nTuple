@@ -1,7 +1,7 @@
 #include "analysisNTuple.fcl"
 #include "simulationservices_sbnd.fcl"
-###include "backtrackerservice.fcl"
-###include "particleinventoryservice.fcl"
+#include "backtrackerservice.fcl"
+#include "particleinventoryservice.fcl"
 
 process_name: AnalysisNTuple      #The process name must NOT contain any underscores
 
@@ -12,8 +12,9 @@ source:
 }
 
 services: {
-  #BackTrackerService:  @local::standard_backtrackerservice
-  #ParticleInventoryService: @local::standard_particleinventoryservice
+  @table::sbnd_simulation_services
+  BackTrackerService:  @local::standard_backtrackerservice
+  ParticleInventoryService: @local::standard_particleinventoryservice
 }
 #  scheduler:               { defaultExceptions: false }    # Make all uncaught exceptions fatal.
 #  TFileService: { fileName: "MyFilter.root" }

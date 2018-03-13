@@ -44,6 +44,7 @@ art_make(
                            ${ROOT_SPECTRUM}
                            ${ROOT_ROOFIT}
                            ${ROOT_ROOFITCORE}
+                           sbndcode_RecoUtils
         )
 install_headers()
 install_fhicl()

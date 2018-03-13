@@ -13,6 +13,13 @@ analysisNTuple:
   SelectedBorderX: 15.
   SelectedBorderY: 30.
   SelectedBorderZ: 15.
+  TruthLabel:                "generator"
+  G4Label:                   "largeant"
+  PandoraLabel:              "pandora"
+  RecoTrackLabel:            "pandoraTrack"
+  RecoShowerLabel:           "emshower"
+  RecoTrackCalorimetryLabel: "pandoraCalo"
+  RecoTrackParticleIDLabel:  "pandoraPid"
 
 }
 
