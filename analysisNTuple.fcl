@@ -14,6 +14,13 @@ analysisNTuple:
   SelectedBorderY: 30.
   SelectedBorderZ: 15.
 
+  TruthLabel:         "generator"
+  GeantLabel:         "largeant"
+  PandoraLabel:       "pandora"
+  RecoTrackLabel:     "pandoraTrack"
+  RecoTrackCaloLabel: "pandoraCalo"
+  RecoTrackPidLabel:  "pandoraPid"
+  RecoShowerLabel:    "emshower"
 }
 
 END_PROLOG

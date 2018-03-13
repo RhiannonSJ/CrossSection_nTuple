@@ -3,12 +3,12 @@
 WORKING_DIR=${MRB_SOURCE}/analysistree/analysistree/working_dir
 PANDORA_DIR=${MRB_SOURCE}/analysistree/analysistree
 
-TEST_SBND_PANDORA=/sbnd/app/users/rsjones/LArSoft_v06_69_00/test/1_file.root
+TEST_2=/pnfs/sbnd/scratch/users/rsjones/reco_for_analysis_2.txt
 
 rm -rf $WORKING_DIR/*
 
 cd $WORKING_DIR
 
-lar -c run_analysisNTuple.fcl -s $TEST_SBND_PANDORA
+lar -c run_analysisNTuple.fcl -S $TEST_2
 
 cd $PANDORA_DIR
