@@ -1,199 +1,199 @@
-%MSG-i MF_INIT_OK:  Early 13-Mar-2018 11:23:52 CDT JobSetup
+%MSG-i MF_INIT_OK:  Early 14-Mar-2018 14:10:19 CDT JobSetup
 Messagelogger initialization complete.
 %MSG
-%MSG-i Root_Information:  Early TGeoManager::Import() 13-Mar-2018 11:24:01 CDT  JobSetup
+%MSG-i Root_Information:  Early TGeoManager::Import() 14-Mar-2018 14:10:26 CDT  JobSetup
 Reading geometry from file: /sbnd/app/users/rsjones/LArSoft_v06_69_00/LArSoft-v06_70_00/localProducts_larsoft_v06_70_00_e15_prof/sbndcode/v06_70_00/gdml/sbnd_v01_01.gdml
 %MSG
-%MSG-i Root_Information:  Early TGeoManager::TGeoManager()  13-Mar-2018 11:24:01 CDT JobSetup
+%MSG-i Root_Information:  Early TGeoManager::TGeoManager()  14-Mar-2018 14:10:26 CDT JobSetup
 Geometry GDMLImport, Geometry imported from GDML created
 %MSG
-%MSG-i Root_Information:  Early TGeoManager::SetTopVolume()  13-Mar-2018 11:24:02 CDT JobSetup
+%MSG-i Root_Information:  Early TGeoManager::SetTopVolume()  14-Mar-2018 14:10:27 CDT JobSetup
 Top volume is volWorld. Master volume is volWorld
 %MSG
-%MSG-i Root_Information:  Early TGeoNavigator::BuildCache()  13-Mar-2018 11:24:02 CDT JobSetup
+%MSG-i Root_Information:  Early TGeoNavigator::BuildCache()  14-Mar-2018 14:10:27 CDT JobSetup
 --- Maximum geometry depth set to 100
 %MSG
-%MSG-i Root_Information:  Early TGeoManager::CheckGeometry()  13-Mar-2018 11:24:02 CDT JobSetup
+%MSG-i Root_Information:  Early TGeoManager::CheckGeometry()  14-Mar-2018 14:10:27 CDT JobSetup
 Fixing runtime shapes...
 %MSG
-%MSG-i Root_Information:  Early TGeoManager::CheckGeometry()  13-Mar-2018 11:24:02 CDT JobSetup
+%MSG-i Root_Information:  Early TGeoManager::CheckGeometry()  14-Mar-2018 14:10:27 CDT JobSetup
 ...Nothing to fix
 %MSG
-%MSG-i Root_Information:  Early TGeoManager::CloseGeometry()  13-Mar-2018 11:24:02 CDT JobSetup
+%MSG-i Root_Information:  Early TGeoManager::CloseGeometry()  14-Mar-2018 14:10:27 CDT JobSetup
 Counting nodes...
 %MSG
-%MSG-i Root_Information:  Early TGeoManager::Voxelize()  13-Mar-2018 11:24:02 CDT JobSetup
+%MSG-i Root_Information:  Early TGeoManager::Voxelize()  14-Mar-2018 14:10:27 CDT JobSetup
 Voxelizing...
 %MSG
-%MSG-i Root_Information:  Early TGeoManager::CloseGeometry()  13-Mar-2018 11:24:02 CDT JobSetup
+%MSG-i Root_Information:  Early TGeoManager::CloseGeometry()  14-Mar-2018 14:10:27 CDT JobSetup
 Building cache...
 %MSG
-%MSG-i Root_Information:  Early TGeoManager::CountLevels()  13-Mar-2018 11:24:02 CDT JobSetup
+%MSG-i Root_Information:  Early TGeoManager::CountLevels()  14-Mar-2018 14:10:27 CDT JobSetup
 max level = 5, max placements = 1986
 %MSG
-%MSG-i Root_Information:  Early TGeoManager::CloseGeometry()  13-Mar-2018 11:24:02 CDT JobSetup
+%MSG-i Root_Information:  Early TGeoManager::CloseGeometry()  14-Mar-2018 14:10:27 CDT JobSetup
 14464 nodes/ 3577 volume UID's in Geometry imported from GDML
 %MSG
-%MSG-i Root_Information:  Early TGeoManager::CloseGeometry()  13-Mar-2018 11:24:02 CDT JobSetup
+%MSG-i Root_Information:  Early TGeoManager::CloseGeometry()  14-Mar-2018 14:10:27 CDT JobSetup
 ----------------modeler ready----------------
 %MSG
-%MSG-i AuxDetGeometryCore:  Early 13-Mar-2018 11:24:02 CDT JobSetup
+%MSG-i AuxDetGeometryCore:  Early 14-Mar-2018 14:10:27 CDT JobSetup
 New detector geometry loaded from 
 	/sbnd/app/users/rsjones/LArSoft_v06_69_00/LArSoft-v06_70_00/localProducts_larsoft_v06_70_00_e15_prof/sbndcode/v06_70_00/gdml/sbnd_v01_01.gdml
 	/sbnd/app/users/rsjones/LArSoft_v06_69_00/LArSoft-v06_70_00/localProducts_larsoft_v06_70_00_e15_prof/sbndcode/v06_70_00/gdml/sbnd_v01_01.gdml
 
 %MSG
-%MSG-i GeometryCore:  Early 13-Mar-2018 11:24:02 CDT JobSetup
+%MSG-i GeometryCore:  Early 14-Mar-2018 14:10:27 CDT JobSetup
 New detector geometry loaded from 
 	/sbnd/app/users/rsjones/LArSoft_v06_69_00/LArSoft-v06_70_00/localProducts_larsoft_v06_70_00_e15_prof/sbndcode/v06_70_00/gdml/sbnd_v01_01.gdml
 	/sbnd/app/users/rsjones/LArSoft_v06_69_00/LArSoft-v06_70_00/localProducts_larsoft_v06_70_00_e15_prof/sbndcode/v06_70_00/gdml/sbnd_v01_01_nowires.gdml
 
 %MSG
-%MSG-i GeometryCore:  Early 13-Mar-2018 11:24:02 CDT JobSetup
+%MSG-i GeometryCore:  Early 14-Mar-2018 14:10:27 CDT JobSetup
 Sorting volumes...
 %MSG
-%MSG-i ChannelMapStandardAlg:  Early 13-Mar-2018 11:24:02 CDT JobSetup
+%MSG-i ChannelMapStandardAlg:  Early 14-Mar-2018 14:10:27 CDT JobSetup
 Initializing Standard ChannelMap...
 %MSG
-%MSG-i SimpleChannelStatusService:  Early 13-Mar-2018 11:24:02 CDT JobSetup
+%MSG-i SimpleChannelStatusService:  Early 14-Mar-2018 14:10:27 CDT JobSetup
 Loaded from configuration:
   - 0 bad channels
   - 0 noisy channels
   - largest channel ID: 11275, largest present: 11275
 %MSG
-%MSG-i setupProvider<DetectorPropertiesStandard>:  Early  13-Mar-2018 11:24:02 CDT JobSetup
+%MSG-i setupProvider<DetectorPropertiesStandard>:  Early  14-Mar-2018 14:10:27 CDT JobSetup
 Asked to ignore 1 keys: 'InheritNumberTimeSamples'
 %MSG
-%MSG-i SignalShapingServiceSBND:  Early 13-Mar-2018 11:24:02 CDT JobSetup
+%MSG-i SignalShapingServiceSBND:  Early 14-Mar-2018 14:10:27 CDT JobSetup
 Getting Filter from .fcl file
 %MSG
-%MSG-i SignalShapingServiceSBND:  Early 13-Mar-2018 11:24:02 CDT JobSetup
+%MSG-i SignalShapingServiceSBND:  Early 14-Mar-2018 14:10:27 CDT JobSetup
 Using the field response provided from '/cvmfs/sbnd.opensciencegrid.org/products/sbnd/sbnd_data/v01_01_00/Response/sbnd_response_v1.0.root' (histograms 'FieldResponse_*')
 %MSG
-13-Mar-2018 11:24:03 CDT  Initiating request to open input file "/pnfs/sbnd/scratch/users/rsjones/calo_pid_pandora/reco/4391193_0/prodgenie_sbnd_GenieGen-20171018T120545_2ed084a1-1d0f-4524-99c9-daf3ee965625_G4-20171018T141423_DetSim-20171018T165210_Reco-20180306T181558.root"
-%MSG-i Root_Information:  Early TClass::Init() 13-Mar-2018 11:24:03 CDT JobSetup
+14-Mar-2018 14:10:28 CDT  Initiating request to open input file "/pnfs/sbnd/scratch/users/rsjones/calo_pid_pandora/reco/4391193_0/prodgenie_sbnd_GenieGen-20171018T120545_2ed084a1-1d0f-4524-99c9-daf3ee965625_G4-20171018T141423_DetSim-20171018T165210_Reco-20180306T181558.root"
+%MSG-i Root_Information:  Early TClass::Init() 14-Mar-2018 14:10:28 CDT JobSetup
 no dictionary for class boost::array<unsigned char,20> is available
 %MSG
-13-Mar-2018 11:24:04 CDT  Opened input file "/pnfs/sbnd/scratch/users/rsjones/calo_pid_pandora/reco/4391193_0/prodgenie_sbnd_GenieGen-20171018T120545_2ed084a1-1d0f-4524-99c9-daf3ee965625_G4-20171018T141423_DetSim-20171018T165210_Reco-20180306T181558.root"
-Begin processing the 1st record. run: 1 subRun: 102 event: 5051 at 13-Mar-2018 11:24:07 CDT
-Begin processing the 2nd record. run: 1 subRun: 102 event: 5052 at 13-Mar-2018 11:24:07 CDT
-Begin processing the 3rd record. run: 1 subRun: 102 event: 5053 at 13-Mar-2018 11:24:07 CDT
-Begin processing the 4th record. run: 1 subRun: 102 event: 5054 at 13-Mar-2018 11:24:07 CDT
-Begin processing the 5th record. run: 1 subRun: 102 event: 5055 at 13-Mar-2018 11:24:07 CDT
-Begin processing the 6th record. run: 1 subRun: 102 event: 5056 at 13-Mar-2018 11:24:07 CDT
-Begin processing the 7th record. run: 1 subRun: 102 event: 5057 at 13-Mar-2018 11:24:07 CDT
-Begin processing the 8th record. run: 1 subRun: 102 event: 5058 at 13-Mar-2018 11:24:07 CDT
-Begin processing the 9th record. run: 1 subRun: 102 event: 5059 at 13-Mar-2018 11:24:07 CDT
-Begin processing the 10th record. run: 1 subRun: 102 event: 5060 at 13-Mar-2018 11:24:07 CDT
-Begin processing the 11th record. run: 1 subRun: 102 event: 5061 at 13-Mar-2018 11:24:07 CDT
-Begin processing the 12th record. run: 1 subRun: 102 event: 5062 at 13-Mar-2018 11:24:07 CDT
-Begin processing the 13th record. run: 1 subRun: 102 event: 5063 at 13-Mar-2018 11:24:07 CDT
-Begin processing the 14th record. run: 1 subRun: 102 event: 5064 at 13-Mar-2018 11:24:07 CDT
-Begin processing the 15th record. run: 1 subRun: 102 event: 5065 at 13-Mar-2018 11:24:07 CDT
-Begin processing the 16th record. run: 1 subRun: 102 event: 5066 at 13-Mar-2018 11:24:07 CDT
-Begin processing the 17th record. run: 1 subRun: 102 event: 5067 at 13-Mar-2018 11:24:07 CDT
-Begin processing the 18th record. run: 1 subRun: 102 event: 5068 at 13-Mar-2018 11:24:07 CDT
-Begin processing the 19th record. run: 1 subRun: 102 event: 5069 at 13-Mar-2018 11:24:07 CDT
-Begin processing the 20th record. run: 1 subRun: 102 event: 5070 at 13-Mar-2018 11:24:07 CDT
-Begin processing the 21st record. run: 1 subRun: 102 event: 5071 at 13-Mar-2018 11:24:07 CDT
-Begin processing the 22nd record. run: 1 subRun: 102 event: 5072 at 13-Mar-2018 11:24:07 CDT
-Begin processing the 23rd record. run: 1 subRun: 102 event: 5073 at 13-Mar-2018 11:24:07 CDT
-Begin processing the 24th record. run: 1 subRun: 102 event: 5074 at 13-Mar-2018 11:24:07 CDT
-Begin processing the 25th record. run: 1 subRun: 102 event: 5075 at 13-Mar-2018 11:24:07 CDT
-Begin processing the 26th record. run: 1 subRun: 102 event: 5076 at 13-Mar-2018 11:24:07 CDT
-Begin processing the 27th record. run: 1 subRun: 102 event: 5077 at 13-Mar-2018 11:24:07 CDT
-Begin processing the 28th record. run: 1 subRun: 102 event: 5078 at 13-Mar-2018 11:24:07 CDT
-Begin processing the 29th record. run: 1 subRun: 102 event: 5079 at 13-Mar-2018 11:24:07 CDT
-Begin processing the 30th record. run: 1 subRun: 102 event: 5080 at 13-Mar-2018 11:24:07 CDT
-Begin processing the 31st record. run: 1 subRun: 102 event: 5081 at 13-Mar-2018 11:24:07 CDT
-Begin processing the 32nd record. run: 1 subRun: 102 event: 5082 at 13-Mar-2018 11:24:07 CDT
-Begin processing the 33rd record. run: 1 subRun: 102 event: 5083 at 13-Mar-2018 11:24:07 CDT
-Begin processing the 34th record. run: 1 subRun: 102 event: 5084 at 13-Mar-2018 11:24:07 CDT
-Begin processing the 35th record. run: 1 subRun: 102 event: 5085 at 13-Mar-2018 11:24:07 CDT
-Begin processing the 36th record. run: 1 subRun: 102 event: 5086 at 13-Mar-2018 11:24:08 CDT
-Begin processing the 37th record. run: 1 subRun: 102 event: 5087 at 13-Mar-2018 11:24:08 CDT
-Begin processing the 38th record. run: 1 subRun: 102 event: 5088 at 13-Mar-2018 11:24:08 CDT
-Begin processing the 39th record. run: 1 subRun: 102 event: 5089 at 13-Mar-2018 11:24:08 CDT
-Begin processing the 40th record. run: 1 subRun: 102 event: 5090 at 13-Mar-2018 11:24:08 CDT
-Begin processing the 41st record. run: 1 subRun: 102 event: 5091 at 13-Mar-2018 11:24:08 CDT
-Begin processing the 42nd record. run: 1 subRun: 102 event: 5092 at 13-Mar-2018 11:24:08 CDT
-Begin processing the 43rd record. run: 1 subRun: 102 event: 5093 at 13-Mar-2018 11:24:08 CDT
-Begin processing the 44th record. run: 1 subRun: 102 event: 5094 at 13-Mar-2018 11:24:08 CDT
-Begin processing the 45th record. run: 1 subRun: 102 event: 5095 at 13-Mar-2018 11:24:08 CDT
-Begin processing the 46th record. run: 1 subRun: 102 event: 5096 at 13-Mar-2018 11:24:08 CDT
-Begin processing the 47th record. run: 1 subRun: 102 event: 5097 at 13-Mar-2018 11:24:08 CDT
-Begin processing the 48th record. run: 1 subRun: 102 event: 5098 at 13-Mar-2018 11:24:08 CDT
-Begin processing the 49th record. run: 1 subRun: 102 event: 5099 at 13-Mar-2018 11:24:08 CDT
-Begin processing the 50th record. run: 1 subRun: 102 event: 5100 at 13-Mar-2018 11:24:08 CDT
-13-Mar-2018 11:24:08 CDT  Closed input file "/pnfs/sbnd/scratch/users/rsjones/calo_pid_pandora/reco/4391193_0/prodgenie_sbnd_GenieGen-20171018T120545_2ed084a1-1d0f-4524-99c9-daf3ee965625_G4-20171018T141423_DetSim-20171018T165210_Reco-20180306T181558.root"
-13-Mar-2018 11:24:08 CDT  Initiating request to open input file "/pnfs/sbnd/scratch/users/rsjones/calo_pid_pandora/reco/4391193_1/prodgenie_sbnd_GenieGen-20171018T120539_e7e58f3a-459f-45f9-9ce1-d4bcc8a6ab82_G4-20171018T141654_DetSim-20171018T165226_Reco-20180306T183750.root"
-13-Mar-2018 11:24:08 CDT  Opened input file "/pnfs/sbnd/scratch/users/rsjones/calo_pid_pandora/reco/4391193_1/prodgenie_sbnd_GenieGen-20171018T120539_e7e58f3a-459f-45f9-9ce1-d4bcc8a6ab82_G4-20171018T141654_DetSim-20171018T165226_Reco-20180306T183750.root"
-Begin processing the 51st record. run: 1 subRun: 94 event: 4651 at 13-Mar-2018 11:24:08 CDT
-Begin processing the 52nd record. run: 1 subRun: 94 event: 4652 at 13-Mar-2018 11:24:08 CDT
-Begin processing the 53rd record. run: 1 subRun: 94 event: 4653 at 13-Mar-2018 11:24:08 CDT
-Begin processing the 54th record. run: 1 subRun: 94 event: 4654 at 13-Mar-2018 11:24:08 CDT
-Begin processing the 55th record. run: 1 subRun: 94 event: 4655 at 13-Mar-2018 11:24:08 CDT
-Begin processing the 56th record. run: 1 subRun: 94 event: 4656 at 13-Mar-2018 11:24:08 CDT
-Begin processing the 57th record. run: 1 subRun: 94 event: 4657 at 13-Mar-2018 11:24:08 CDT
-Begin processing the 58th record. run: 1 subRun: 94 event: 4658 at 13-Mar-2018 11:24:08 CDT
-Begin processing the 59th record. run: 1 subRun: 94 event: 4659 at 13-Mar-2018 11:24:08 CDT
-Begin processing the 60th record. run: 1 subRun: 94 event: 4660 at 13-Mar-2018 11:24:08 CDT
-Begin processing the 61st record. run: 1 subRun: 94 event: 4661 at 13-Mar-2018 11:24:08 CDT
-Begin processing the 62nd record. run: 1 subRun: 94 event: 4662 at 13-Mar-2018 11:24:08 CDT
-Begin processing the 63rd record. run: 1 subRun: 94 event: 4663 at 13-Mar-2018 11:24:08 CDT
-Begin processing the 64th record. run: 1 subRun: 94 event: 4664 at 13-Mar-2018 11:24:08 CDT
-Begin processing the 65th record. run: 1 subRun: 94 event: 4665 at 13-Mar-2018 11:24:08 CDT
-Begin processing the 66th record. run: 1 subRun: 94 event: 4666 at 13-Mar-2018 11:24:08 CDT
-Begin processing the 67th record. run: 1 subRun: 94 event: 4667 at 13-Mar-2018 11:24:08 CDT
-Begin processing the 68th record. run: 1 subRun: 94 event: 4668 at 13-Mar-2018 11:24:08 CDT
-Begin processing the 69th record. run: 1 subRun: 94 event: 4669 at 13-Mar-2018 11:24:08 CDT
-Begin processing the 70th record. run: 1 subRun: 94 event: 4670 at 13-Mar-2018 11:24:08 CDT
-Begin processing the 71st record. run: 1 subRun: 94 event: 4671 at 13-Mar-2018 11:24:08 CDT
-Begin processing the 72nd record. run: 1 subRun: 94 event: 4672 at 13-Mar-2018 11:24:08 CDT
-Begin processing the 73rd record. run: 1 subRun: 94 event: 4673 at 13-Mar-2018 11:24:08 CDT
-Begin processing the 74th record. run: 1 subRun: 94 event: 4674 at 13-Mar-2018 11:24:08 CDT
-Begin processing the 75th record. run: 1 subRun: 94 event: 4675 at 13-Mar-2018 11:24:08 CDT
-Begin processing the 76th record. run: 1 subRun: 94 event: 4676 at 13-Mar-2018 11:24:08 CDT
-Begin processing the 77th record. run: 1 subRun: 94 event: 4677 at 13-Mar-2018 11:24:08 CDT
-Begin processing the 78th record. run: 1 subRun: 94 event: 4678 at 13-Mar-2018 11:24:08 CDT
-Begin processing the 79th record. run: 1 subRun: 94 event: 4679 at 13-Mar-2018 11:24:08 CDT
-Begin processing the 80th record. run: 1 subRun: 94 event: 4680 at 13-Mar-2018 11:24:08 CDT
-Begin processing the 81st record. run: 1 subRun: 94 event: 4681 at 13-Mar-2018 11:24:08 CDT
-Begin processing the 82nd record. run: 1 subRun: 94 event: 4682 at 13-Mar-2018 11:24:09 CDT
-Begin processing the 83rd record. run: 1 subRun: 94 event: 4683 at 13-Mar-2018 11:24:09 CDT
-Begin processing the 84th record. run: 1 subRun: 94 event: 4684 at 13-Mar-2018 11:24:09 CDT
-Begin processing the 85th record. run: 1 subRun: 94 event: 4685 at 13-Mar-2018 11:24:09 CDT
-Begin processing the 86th record. run: 1 subRun: 94 event: 4686 at 13-Mar-2018 11:24:09 CDT
-Begin processing the 87th record. run: 1 subRun: 94 event: 4687 at 13-Mar-2018 11:24:09 CDT
-Begin processing the 88th record. run: 1 subRun: 94 event: 4688 at 13-Mar-2018 11:24:09 CDT
-Begin processing the 89th record. run: 1 subRun: 94 event: 4689 at 13-Mar-2018 11:24:09 CDT
-Begin processing the 90th record. run: 1 subRun: 94 event: 4690 at 13-Mar-2018 11:24:09 CDT
-Begin processing the 91st record. run: 1 subRun: 94 event: 4691 at 13-Mar-2018 11:24:09 CDT
-Begin processing the 92nd record. run: 1 subRun: 94 event: 4692 at 13-Mar-2018 11:24:09 CDT
-Begin processing the 93rd record. run: 1 subRun: 94 event: 4693 at 13-Mar-2018 11:24:09 CDT
-Begin processing the 94th record. run: 1 subRun: 94 event: 4694 at 13-Mar-2018 11:24:09 CDT
-Begin processing the 95th record. run: 1 subRun: 94 event: 4695 at 13-Mar-2018 11:24:09 CDT
-Begin processing the 96th record. run: 1 subRun: 94 event: 4696 at 13-Mar-2018 11:24:09 CDT
-Begin processing the 97th record. run: 1 subRun: 94 event: 4697 at 13-Mar-2018 11:24:09 CDT
-Begin processing the 98th record. run: 1 subRun: 94 event: 4698 at 13-Mar-2018 11:24:09 CDT
-Begin processing the 99th record. run: 1 subRun: 94 event: 4699 at 13-Mar-2018 11:24:09 CDT
-Begin processing the 100th record. run: 1 subRun: 94 event: 4700 at 13-Mar-2018 11:24:09 CDT
-13-Mar-2018 11:24:09 CDT  Closed input file "/pnfs/sbnd/scratch/users/rsjones/calo_pid_pandora/reco/4391193_1/prodgenie_sbnd_GenieGen-20171018T120539_e7e58f3a-459f-45f9-9ce1-d4bcc8a6ab82_G4-20171018T141654_DetSim-20171018T165226_Reco-20180306T183750.root"
+14-Mar-2018 14:10:29 CDT  Opened input file "/pnfs/sbnd/scratch/users/rsjones/calo_pid_pandora/reco/4391193_0/prodgenie_sbnd_GenieGen-20171018T120545_2ed084a1-1d0f-4524-99c9-daf3ee965625_G4-20171018T141423_DetSim-20171018T165210_Reco-20180306T181558.root"
+Begin processing the 1st record. run: 1 subRun: 102 event: 5051 at 14-Mar-2018 14:10:32 CDT
+Begin processing the 2nd record. run: 1 subRun: 102 event: 5052 at 14-Mar-2018 14:10:32 CDT
+Begin processing the 3rd record. run: 1 subRun: 102 event: 5053 at 14-Mar-2018 14:10:32 CDT
+Begin processing the 4th record. run: 1 subRun: 102 event: 5054 at 14-Mar-2018 14:10:32 CDT
+Begin processing the 5th record. run: 1 subRun: 102 event: 5055 at 14-Mar-2018 14:10:32 CDT
+Begin processing the 6th record. run: 1 subRun: 102 event: 5056 at 14-Mar-2018 14:10:32 CDT
+Begin processing the 7th record. run: 1 subRun: 102 event: 5057 at 14-Mar-2018 14:10:32 CDT
+Begin processing the 8th record. run: 1 subRun: 102 event: 5058 at 14-Mar-2018 14:10:32 CDT
+Begin processing the 9th record. run: 1 subRun: 102 event: 5059 at 14-Mar-2018 14:10:32 CDT
+Begin processing the 10th record. run: 1 subRun: 102 event: 5060 at 14-Mar-2018 14:10:32 CDT
+Begin processing the 11th record. run: 1 subRun: 102 event: 5061 at 14-Mar-2018 14:10:32 CDT
+Begin processing the 12th record. run: 1 subRun: 102 event: 5062 at 14-Mar-2018 14:10:32 CDT
+Begin processing the 13th record. run: 1 subRun: 102 event: 5063 at 14-Mar-2018 14:10:32 CDT
+Begin processing the 14th record. run: 1 subRun: 102 event: 5064 at 14-Mar-2018 14:10:33 CDT
+Begin processing the 15th record. run: 1 subRun: 102 event: 5065 at 14-Mar-2018 14:10:33 CDT
+Begin processing the 16th record. run: 1 subRun: 102 event: 5066 at 14-Mar-2018 14:10:33 CDT
+Begin processing the 17th record. run: 1 subRun: 102 event: 5067 at 14-Mar-2018 14:10:33 CDT
+Begin processing the 18th record. run: 1 subRun: 102 event: 5068 at 14-Mar-2018 14:10:33 CDT
+Begin processing the 19th record. run: 1 subRun: 102 event: 5069 at 14-Mar-2018 14:10:33 CDT
+Begin processing the 20th record. run: 1 subRun: 102 event: 5070 at 14-Mar-2018 14:10:33 CDT
+Begin processing the 21st record. run: 1 subRun: 102 event: 5071 at 14-Mar-2018 14:10:33 CDT
+Begin processing the 22nd record. run: 1 subRun: 102 event: 5072 at 14-Mar-2018 14:10:33 CDT
+Begin processing the 23rd record. run: 1 subRun: 102 event: 5073 at 14-Mar-2018 14:10:33 CDT
+Begin processing the 24th record. run: 1 subRun: 102 event: 5074 at 14-Mar-2018 14:10:33 CDT
+Begin processing the 25th record. run: 1 subRun: 102 event: 5075 at 14-Mar-2018 14:10:33 CDT
+Begin processing the 26th record. run: 1 subRun: 102 event: 5076 at 14-Mar-2018 14:10:33 CDT
+Begin processing the 27th record. run: 1 subRun: 102 event: 5077 at 14-Mar-2018 14:10:33 CDT
+Begin processing the 28th record. run: 1 subRun: 102 event: 5078 at 14-Mar-2018 14:10:33 CDT
+Begin processing the 29th record. run: 1 subRun: 102 event: 5079 at 14-Mar-2018 14:10:33 CDT
+Begin processing the 30th record. run: 1 subRun: 102 event: 5080 at 14-Mar-2018 14:10:33 CDT
+Begin processing the 31st record. run: 1 subRun: 102 event: 5081 at 14-Mar-2018 14:10:33 CDT
+Begin processing the 32nd record. run: 1 subRun: 102 event: 5082 at 14-Mar-2018 14:10:33 CDT
+Begin processing the 33rd record. run: 1 subRun: 102 event: 5083 at 14-Mar-2018 14:10:33 CDT
+Begin processing the 34th record. run: 1 subRun: 102 event: 5084 at 14-Mar-2018 14:10:33 CDT
+Begin processing the 35th record. run: 1 subRun: 102 event: 5085 at 14-Mar-2018 14:10:33 CDT
+Begin processing the 36th record. run: 1 subRun: 102 event: 5086 at 14-Mar-2018 14:10:33 CDT
+Begin processing the 37th record. run: 1 subRun: 102 event: 5087 at 14-Mar-2018 14:10:33 CDT
+Begin processing the 38th record. run: 1 subRun: 102 event: 5088 at 14-Mar-2018 14:10:33 CDT
+Begin processing the 39th record. run: 1 subRun: 102 event: 5089 at 14-Mar-2018 14:10:33 CDT
+Begin processing the 40th record. run: 1 subRun: 102 event: 5090 at 14-Mar-2018 14:10:33 CDT
+Begin processing the 41st record. run: 1 subRun: 102 event: 5091 at 14-Mar-2018 14:10:33 CDT
+Begin processing the 42nd record. run: 1 subRun: 102 event: 5092 at 14-Mar-2018 14:10:33 CDT
+Begin processing the 43rd record. run: 1 subRun: 102 event: 5093 at 14-Mar-2018 14:10:33 CDT
+Begin processing the 44th record. run: 1 subRun: 102 event: 5094 at 14-Mar-2018 14:10:33 CDT
+Begin processing the 45th record. run: 1 subRun: 102 event: 5095 at 14-Mar-2018 14:10:33 CDT
+Begin processing the 46th record. run: 1 subRun: 102 event: 5096 at 14-Mar-2018 14:10:33 CDT
+Begin processing the 47th record. run: 1 subRun: 102 event: 5097 at 14-Mar-2018 14:10:33 CDT
+Begin processing the 48th record. run: 1 subRun: 102 event: 5098 at 14-Mar-2018 14:10:33 CDT
+Begin processing the 49th record. run: 1 subRun: 102 event: 5099 at 14-Mar-2018 14:10:33 CDT
+Begin processing the 50th record. run: 1 subRun: 102 event: 5100 at 14-Mar-2018 14:10:33 CDT
+14-Mar-2018 14:10:33 CDT  Closed input file "/pnfs/sbnd/scratch/users/rsjones/calo_pid_pandora/reco/4391193_0/prodgenie_sbnd_GenieGen-20171018T120545_2ed084a1-1d0f-4524-99c9-daf3ee965625_G4-20171018T141423_DetSim-20171018T165210_Reco-20180306T181558.root"
+14-Mar-2018 14:10:33 CDT  Initiating request to open input file "/pnfs/sbnd/scratch/users/rsjones/calo_pid_pandora/reco/4391193_1/prodgenie_sbnd_GenieGen-20171018T120539_e7e58f3a-459f-45f9-9ce1-d4bcc8a6ab82_G4-20171018T141654_DetSim-20171018T165226_Reco-20180306T183750.root"
+14-Mar-2018 14:10:33 CDT  Opened input file "/pnfs/sbnd/scratch/users/rsjones/calo_pid_pandora/reco/4391193_1/prodgenie_sbnd_GenieGen-20171018T120539_e7e58f3a-459f-45f9-9ce1-d4bcc8a6ab82_G4-20171018T141654_DetSim-20171018T165226_Reco-20180306T183750.root"
+Begin processing the 51st record. run: 1 subRun: 94 event: 4651 at 14-Mar-2018 14:10:33 CDT
+Begin processing the 52nd record. run: 1 subRun: 94 event: 4652 at 14-Mar-2018 14:10:34 CDT
+Begin processing the 53rd record. run: 1 subRun: 94 event: 4653 at 14-Mar-2018 14:10:34 CDT
+Begin processing the 54th record. run: 1 subRun: 94 event: 4654 at 14-Mar-2018 14:10:34 CDT
+Begin processing the 55th record. run: 1 subRun: 94 event: 4655 at 14-Mar-2018 14:10:34 CDT
+Begin processing the 56th record. run: 1 subRun: 94 event: 4656 at 14-Mar-2018 14:10:34 CDT
+Begin processing the 57th record. run: 1 subRun: 94 event: 4657 at 14-Mar-2018 14:10:34 CDT
+Begin processing the 58th record. run: 1 subRun: 94 event: 4658 at 14-Mar-2018 14:10:34 CDT
+Begin processing the 59th record. run: 1 subRun: 94 event: 4659 at 14-Mar-2018 14:10:34 CDT
+Begin processing the 60th record. run: 1 subRun: 94 event: 4660 at 14-Mar-2018 14:10:34 CDT
+Begin processing the 61st record. run: 1 subRun: 94 event: 4661 at 14-Mar-2018 14:10:34 CDT
+Begin processing the 62nd record. run: 1 subRun: 94 event: 4662 at 14-Mar-2018 14:10:34 CDT
+Begin processing the 63rd record. run: 1 subRun: 94 event: 4663 at 14-Mar-2018 14:10:34 CDT
+Begin processing the 64th record. run: 1 subRun: 94 event: 4664 at 14-Mar-2018 14:10:34 CDT
+Begin processing the 65th record. run: 1 subRun: 94 event: 4665 at 14-Mar-2018 14:10:34 CDT
+Begin processing the 66th record. run: 1 subRun: 94 event: 4666 at 14-Mar-2018 14:10:34 CDT
+Begin processing the 67th record. run: 1 subRun: 94 event: 4667 at 14-Mar-2018 14:10:34 CDT
+Begin processing the 68th record. run: 1 subRun: 94 event: 4668 at 14-Mar-2018 14:10:34 CDT
+Begin processing the 69th record. run: 1 subRun: 94 event: 4669 at 14-Mar-2018 14:10:34 CDT
+Begin processing the 70th record. run: 1 subRun: 94 event: 4670 at 14-Mar-2018 14:10:34 CDT
+Begin processing the 71st record. run: 1 subRun: 94 event: 4671 at 14-Mar-2018 14:10:34 CDT
+Begin processing the 72nd record. run: 1 subRun: 94 event: 4672 at 14-Mar-2018 14:10:34 CDT
+Begin processing the 73rd record. run: 1 subRun: 94 event: 4673 at 14-Mar-2018 14:10:34 CDT
+Begin processing the 74th record. run: 1 subRun: 94 event: 4674 at 14-Mar-2018 14:10:34 CDT
+Begin processing the 75th record. run: 1 subRun: 94 event: 4675 at 14-Mar-2018 14:10:34 CDT
+Begin processing the 76th record. run: 1 subRun: 94 event: 4676 at 14-Mar-2018 14:10:34 CDT
+Begin processing the 77th record. run: 1 subRun: 94 event: 4677 at 14-Mar-2018 14:10:34 CDT
+Begin processing the 78th record. run: 1 subRun: 94 event: 4678 at 14-Mar-2018 14:10:34 CDT
+Begin processing the 79th record. run: 1 subRun: 94 event: 4679 at 14-Mar-2018 14:10:34 CDT
+Begin processing the 80th record. run: 1 subRun: 94 event: 4680 at 14-Mar-2018 14:10:34 CDT
+Begin processing the 81st record. run: 1 subRun: 94 event: 4681 at 14-Mar-2018 14:10:34 CDT
+Begin processing the 82nd record. run: 1 subRun: 94 event: 4682 at 14-Mar-2018 14:10:34 CDT
+Begin processing the 83rd record. run: 1 subRun: 94 event: 4683 at 14-Mar-2018 14:10:34 CDT
+Begin processing the 84th record. run: 1 subRun: 94 event: 4684 at 14-Mar-2018 14:10:34 CDT
+Begin processing the 85th record. run: 1 subRun: 94 event: 4685 at 14-Mar-2018 14:10:34 CDT
+Begin processing the 86th record. run: 1 subRun: 94 event: 4686 at 14-Mar-2018 14:10:34 CDT
+Begin processing the 87th record. run: 1 subRun: 94 event: 4687 at 14-Mar-2018 14:10:34 CDT
+Begin processing the 88th record. run: 1 subRun: 94 event: 4688 at 14-Mar-2018 14:10:34 CDT
+Begin processing the 89th record. run: 1 subRun: 94 event: 4689 at 14-Mar-2018 14:10:34 CDT
+Begin processing the 90th record. run: 1 subRun: 94 event: 4690 at 14-Mar-2018 14:10:34 CDT
+Begin processing the 91st record. run: 1 subRun: 94 event: 4691 at 14-Mar-2018 14:10:34 CDT
+Begin processing the 92nd record. run: 1 subRun: 94 event: 4692 at 14-Mar-2018 14:10:34 CDT
+Begin processing the 93rd record. run: 1 subRun: 94 event: 4693 at 14-Mar-2018 14:10:35 CDT
+Begin processing the 94th record. run: 1 subRun: 94 event: 4694 at 14-Mar-2018 14:10:35 CDT
+Begin processing the 95th record. run: 1 subRun: 94 event: 4695 at 14-Mar-2018 14:10:35 CDT
+Begin processing the 96th record. run: 1 subRun: 94 event: 4696 at 14-Mar-2018 14:10:35 CDT
+Begin processing the 97th record. run: 1 subRun: 94 event: 4697 at 14-Mar-2018 14:10:35 CDT
+Begin processing the 98th record. run: 1 subRun: 94 event: 4698 at 14-Mar-2018 14:10:35 CDT
+Begin processing the 99th record. run: 1 subRun: 94 event: 4699 at 14-Mar-2018 14:10:35 CDT
+Begin processing the 100th record. run: 1 subRun: 94 event: 4700 at 14-Mar-2018 14:10:35 CDT
+14-Mar-2018 14:10:35 CDT  Closed input file "/pnfs/sbnd/scratch/users/rsjones/calo_pid_pandora/reco/4391193_1/prodgenie_sbnd_GenieGen-20171018T120539_e7e58f3a-459f-45f9-9ce1-d4bcc8a6ab82_G4-20171018T141654_DetSim-20171018T165226_Reco-20180306T183750.root"
 
 ============================================================================================================================
 TimeTracker printout (sec)                    Min           Avg           Max         Median          RMS         nEvts   
 ============================================================================================================================
-Full event                                0.000553991   0.00465093     0.0359363    0.00091802    0.00739822       100    
+Full event                                0.000666595    0.0140029     0.332678     0.00231469     0.0403596       100    
 ----------------------------------------------------------------------------------------------------------------------------
-source:RootInput(read)                    0.000370021   0.000588773   0.00610093    0.000531703   0.000560837      100    
-end_path:analysisNTuple:AnalysisNTuple    0.000110518   0.00399714     0.0353309    0.000283003   0.00734404       100    
+source:RootInput(read)                    0.000378169   0.000755918   0.00599618    0.00074459    0.000556938      100    
+end_path:analysisNTuple:AnalysisNTuple    0.000203876    0.0131528     0.332002      0.0015038     0.0403248       100    
 ============================================================================================================================
 
 ====================================================================================================
 MemoryTracker summary (base-10 MB units used)
 
-  Peak virtual memory usage (VmPeak)  : 1256.67 MB
-  Peak resident set size usage (VmHWM): 583.881 MB
+  Peak virtual memory usage (VmPeak)  : 1256.53 MB
+  Peak resident set size usage (VmHWM): 585.282 MB
   Details saved in: 'memory.db'
 ====================================================================================================
 
@@ -205,8 +205,8 @@ TrigReport  Trig Bit#        Run    Success      Error Name
 TrigReport     0    0        100        100          0 analysisNTuple
 
 TimeReport ---------- Time  Summary ---[sec]----
-TimeReport CPU = 2.440629 Real = 2.529122
+TimeReport CPU = 3.122525 Real = 4.010920
 
 MemReport  ---------- Memory  Summary ---[base-10 MB]----
-MemReport  VmPeak = 1256.67 VmHWM = 583.881
+MemReport  VmPeak = 1256.53 VmHWM = 585.282
 
