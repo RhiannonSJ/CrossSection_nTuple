@@ -114,13 +114,10 @@ private:
   std::string m_reco_track_particleid_label;
   
   // Counters
-  unsigned int all_events, contained_true, contained;
-  unsigned int contained_primary_reco_tracks;
-  unsigned int min_one_primary_reco_track_energy;
   unsigned int pfparticle, primary_pfparticle;
 
   // ROOT
-  TTree *event_tree, *mcparticle_tree, *recotrack_tree, *recoshower_tree;
+  TTree *event_tree, *mcparticle_tree, *recotrack_tree, *recoshower_tree, *cut_tree;
 
   // Variables associated with event_tree
   // Universal
@@ -154,6 +151,9 @@ private:
   unsigned int sh_dedx_size;
   int sh_id_energy, sh_id_charge, sh_id_hits;
   double sh_start[3], sh_direction[3], sh_length, sh_open_angle, sh_energy, sh_dedx;
+
+  // Cut tree
+  unsigned int c_total, c_beam, c_contained, c_contained_tracks, c_min_one;
   
 };
 
@@ -180,7 +180,7 @@ void pndr::AnalysisNTuple::analyze(art::Event const & e)
   time_now = std::time(nullptr);
   
   // Counter for all events in the sample
-  all_events++;
+  c_total++;
 
   // Proceed with the nTuple-filling if 
   //    True neutrino vertex contained
@@ -221,7 +221,8 @@ void pndr::AnalysisNTuple::analyze(art::Event const & e)
  
       // Check the neutrino came from the beam
       if(mct.Origin() != simb::kBeamNeutrino) continue;
- 
+
+      /*
       // Check the neutrino interaction vertex is within the fiducial volume
       float nu_vertex_x = mct.GetNeutrino().Lepton().Vx();
       float nu_vertex_y = mct.GetNeutrino().Lepton().Vy();
@@ -233,11 +234,11 @@ void pndr::AnalysisNTuple::analyze(art::Event const & e)
            || (nu_vertex_y < (-m_coordinateOffsetY + m_selectedBorderY)) 
            || (nu_vertex_z > (m_detectorHalfLengthZ - m_coordinateOffsetZ - m_selectedBorderZ)) 
            || (nu_vertex_z < (-m_coordinateOffsetZ + m_selectedBorderZ))) return;
-    
+    */
     } 
   }
   // and all tracks are contained
-  contained_true++;
+  c_beam++;
   
 // ------------------------------------------------------------------------------
 //                           EVENT-TREE INFORMATION
@@ -301,7 +302,7 @@ void pndr::AnalysisNTuple::analyze(art::Event const & e)
          || (reco_vertex_z > (m_detectorHalfLengthZ - m_coordinateOffsetZ - m_selectedBorderZ)) 
          || (reco_vertex_z < (-m_coordinateOffsetZ + m_selectedBorderZ))) return;
     
-    contained++;
+    c_contained++;
     
     // Get track associations with PFParticles from Pandora
     art::FindManyP< recob::Track  > fmtrk( pfp_handle, e, m_reco_track_label );
@@ -487,8 +488,8 @@ void pndr::AnalysisNTuple::analyze(art::Event const & e)
     r_showers   = n_primary_showers; 
     r_particles = n_primaries;
 
-    if(contained_track != 0)  contained_primary_reco_tracks++;
-    if(n_primary_tracks != 0) min_one_primary_reco_track_energy++;
+    if(contained_track != 0)  c_contained_tracks++;
+    if(n_primary_tracks != 0) c_min_one++;
 // ------------------------------------------------------------------------------
 //                     EVENT-TREE TRUTH INFORMATION
 // ------------------------------------------------------------------------------
@@ -580,21 +581,22 @@ void pndr::AnalysisNTuple::beginJob()
 
   // Initialise the counters
   // Event based
-  all_events                        = 0;
-  contained_true                    = 0; 
-  contained                         = 0; 
-  contained_primary_reco_tracks     = 0;
-  min_one_primary_reco_track_energy = 0;
+  c_total            = 0;
+  c_beam             = 0; 
+  c_contained        = 0; 
+  c_contained_tracks = 0;
+  c_min_one          = 0;
   
   // Particle based
-  pfparticle                        = 0;
-  primary_pfparticle                = 0;
+  pfparticle         = 0;
+  primary_pfparticle = 0;
 
   // Initiate trees
   event_tree      = new TTree("event_tree",      "Event tree: True and reconstructed SBND event information");
   mcparticle_tree = new TTree("particle_tree",   "MCParticle tree: True SBND initial and final state topology information");
   recotrack_tree  = new TTree("recotrack_tree",  "Track tree: Reconstructed final state track information");
   recoshower_tree = new TTree("recoshower_tree", "Shower tree: Reconstructed final state shower information");
+  cut_tree        = new TTree("cut_tree",        "Cut tree: Information on cuts implements at various stages");
 
   // Event tree branches
   event_tree->Branch("event_id",                   &event_id,              "event_id/I");
@@ -675,40 +677,49 @@ void pndr::AnalysisNTuple::beginJob()
   recoshower_tree->Branch("sh_energy",             &sh_energy,              "sh_energy/D");
   recoshower_tree->Branch("sh_dedx",               &sh_dedx,                "sh_dedx/D");
 
+  cut_tree->Branch("c_total",                      &c_total,                "c_total/i");
+  cut_tree->Branch("c_beam",                       &c_beam,                 "c_beam/i");
+  cut_tree->Branch("c_contained",                  &c_contained,            "c_contained/i");
+  cut_tree->Branch("c_contained_tracks",           &c_contained_tracks,     "c_contained_tracks/i");
+  cut_tree->Branch("c_min_one",                    &c_min_one,              "c_min_one/i");
+  
   // Set directories
   event_tree->SetDirectory(0);
   mcparticle_tree->SetDirectory(0);
   recotrack_tree->SetDirectory(0);
   recoshower_tree->SetDirectory(0);
+  cut_tree->SetDirectory(0);
 
 }
 
 void pndr::AnalysisNTuple::endJob()
 {
   // Implementation of optional member function here.
+  cut_tree->Fill();
 
+  // Additional output file to sum together numbers
   std::cout << "=================================================================================" << std::endl;
   std::cout << "---------------------------------------------------------------------------------" << std::endl;
   std::cout << std::endl;
 
   std::cout << " Total number of events                               : ";
-  std::cout << all_events;
+  std::cout << c_total;
   std::cout << std::endl;
 
   std::cout << " True fiducal neutrino events                         : ";
-  std::cout << contained_true;
+  std::cout << c_beam;
   std::cout << std::endl;
 
   std::cout << " True and reconstructed fiducal neutrino events       : ";
-  std::cout << contained;
+  std::cout << c_contained;
   std::cout << std::endl;
 
   std::cout << " Fiducial and all reconstructed tracks contained      : ";
-  std::cout << contained_primary_reco_tracks;
+  std::cout << c_contained_tracks;
   std::cout << std::endl;
 
   std::cout << " Fiducial, contained and minimum one with energy reco : ";
-  std::cout << min_one_primary_reco_track_energy;
+  std::cout << c_min_one;
   std::cout << std::endl;
 
   std::cout << " Percentage of PFParticles that are primary           : ";
@@ -726,6 +737,7 @@ void pndr::AnalysisNTuple::endJob()
   mcparticle_tree->Write();
   recotrack_tree->Write();
   recoshower_tree->Write();
+  cut_tree->Write();
   file.Write();
   file.Close();
 

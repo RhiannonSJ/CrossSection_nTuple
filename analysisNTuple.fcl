@@ -10,9 +10,9 @@ analysisNTuple:
   CoordinateOffsetX: 200.
   CoordinateOffsetY: 200.
   CoordinateOffsetZ: 0.
-  SelectedBorderX: 15.
-  SelectedBorderY: 30.
-  SelectedBorderZ: 15.
+  SelectedBorderX: 10.
+  SelectedBorderY: 20.
+  SelectedBorderZ: 10.
   TruthLabel:                "generator"
   G4Label:                   "largeant"
   PandoraLabel:              "pandora"
