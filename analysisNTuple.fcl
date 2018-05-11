@@ -20,6 +20,7 @@ analysisNTuple:
   RecoShowerLabel:           "emshower"
   RecoTrackCalorimetryLabel: "pandoraCalo"
   RecoTrackParticleIDLabel:  "pandoraPid"
+  HitLabel:                  "gaushit"
 }
 
 END_PROLOG

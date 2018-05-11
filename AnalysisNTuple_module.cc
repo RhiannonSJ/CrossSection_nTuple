@@ -32,6 +32,7 @@
 #include "art/Framework/Services/Optional/TFileService.h"
 
 #include "nusimdata/SimulationBase/MCTruth.h"
+#include "nusimdata/SimulationBase/GTruth.h"
 #include "nusimdata/SimulationBase/MCNeutrino.h"
 #include "nusimdata/SimulationBase/MCParticle.h"
 #include "larsim/MCCheater/BackTrackerService.h"
@@ -50,6 +51,7 @@
 #include <sstream>
 #include <cmath>
 #include <ctime>
+#include <map>
 #include <vector>
 #include <string>
 #include <iostream>
@@ -63,12 +65,12 @@
 
 #include <typeinfo>
 
-namespace pndr {
+namespace trees {
   class AnalysisNTuple;
 }
 
 
-class pndr::AnalysisNTuple : public art::EDAnalyzer {
+class trees::AnalysisNTuple : public art::EDAnalyzer {
 public:
   explicit AnalysisNTuple(fhicl::ParameterSet const & p);
   // The compiler-generated destructor is fine for non-base
@@ -112,6 +114,7 @@ private:
   std::string m_reco_shower_label;
   std::string m_reco_track_calorimetry_label;
   std::string m_reco_track_particleid_label;
+  std::string m_hit_label;
   
   // Counters
   unsigned int pfparticle, primary_pfparticle;
@@ -136,20 +139,20 @@ private:
   double r_vertex[3];
 
   // Variables associated with mcparticle_tree
-  int p_pdgcode, p_id;
+  int p_pdgcode, p_id, p_n_hits;
   double p_vertex[3], p_end[3], p_momentum[3];
   double p_energy, p_mass, p_transverse_momentum, p_momentum_magnitude;
 
   // Variables associated with recotrack_tree
   unsigned int tr_dedx_size, tr_residual_range_size;
-  int tr_id_energy, tr_id_charge, tr_id_hits;
+  int tr_n_hits, tr_id_energy, tr_id_charge, tr_id_hits;
   double tr_pida, tr_chi2_mu, tr_chi2_pi, tr_chi2_pr, tr_chi2_ka;
   double tr_vertex[3], tr_end[3], tr_dedx[100000], tr_residual_range[100000];
   double tr_length, tr_kinetic_energy, tr_range, tr_missing_energy;
 
   // Variables associated with recoshower_tree
   unsigned int sh_dedx_size;
-  int sh_id_energy, sh_id_charge, sh_id_hits;
+  int sh_n_hits, sh_id_energy, sh_id_charge, sh_id_hits;
   double sh_start[3], sh_direction[3], sh_length, sh_open_angle, sh_energy, sh_dedx;
 
   // Cut tree
@@ -158,7 +161,7 @@ private:
 };
 
 
-pndr::AnalysisNTuple::AnalysisNTuple(fhicl::ParameterSet const & p)
+trees::AnalysisNTuple::AnalysisNTuple(fhicl::ParameterSet const & p)
   :
   EDAnalyzer(p)  // ,
  // More initializers here.
@@ -168,12 +171,12 @@ pndr::AnalysisNTuple::AnalysisNTuple(fhicl::ParameterSet const & p)
 
 }
 
-void pndr::AnalysisNTuple::analyze(art::Event const & e)
+void trees::AnalysisNTuple::analyze(art::Event const & e)
 {
 
-  art::ServiceHandle<cheat::BackTrackerService> bt_serv;
   art::ServiceHandle<cheat::ParticleInventoryService> pi_serv;
-  
+  art::ServiceHandle<cheat::BackTrackerService> bt_serv;
+
   // Add one to the event counter
   event_id++;
   // Get current time stamp
@@ -193,23 +196,38 @@ void pndr::AnalysisNTuple::analyze(art::Event const & e)
 // ------------------------------------------------------------------------------
   // Get the MCTruth handle
   art::Handle< std::vector< simb::MCTruth > > mct_handle;
-  e.getByLabel(m_generator_label, mct_handle );
+  e.getByLabel(m_generator_label, mct_handle);
+  /*std::vector< art::Ptr<simb::MCTruth> > mct_vector;
+  if (e.getByLabel(m_generator_label, mct_handle)) art::fill_ptr_vector(mct_vector, mct_handle);*/
   int mct_size = mct_handle->size();
  
   // Get the Track handle
   art::Handle< std::vector< recob::Track > > trk_handle;
-  e.getByLabel(m_reco_track_label, trk_handle );
+  e.getByLabel(m_reco_track_label, trk_handle);
+/*  std::vector< art::Ptr< recob::Track > > trk_vector;
+  if (e.getByLabel(m_reco_track_label, trk_handle)) art::fill_ptr_vector(trk_vector, trk_handle);*/
   //int trk_size = trk_handle->size();
   
   // Get the Shower handle
   art::Handle< std::vector< recob::Shower > > shw_handle;
-  e.getByLabel(m_reco_shower_label, shw_handle );
+  e.getByLabel(m_reco_shower_label, shw_handle);
+/*  std::vector< art::Ptr< recob::Shower > > shw_vector;
+  if (e.getByLabel(m_reco_shower_label, shw_handle)) art::fill_ptr_vector(shw_vector, shw_handle);*/
   int shw_size = shw_handle->size();
 
   // Get the PFParticle handle
   art::Handle< std::vector< recob::PFParticle > > pfp_handle;
   e.getByLabel(m_pandora_label, pfp_handle );
+/*  std::vector< art::Ptr< recob::PFParticle > > pfp_vector;
+  if (e.getByLabel(m_pandora_label, pfp_handle)) art::fill_ptr_vector(pfp_vector, pfp_handle);*/
   int pfp_size = pfp_handle->size();
+  
+  // Get the hit handle
+  art::Handle< std::vector< recob::Hit > > hit_handle;
+  e.getByLabel(m_hit_label, hit_handle );
+  std::vector< art::Ptr< recob::Hit > > hit_vector;
+  if (e.getByLabel(m_hit_label, hit_handle)) art::fill_ptr_vector(hit_vector, hit_handle);
+  //int hit_size = hit_handle->size();
   
 // ------------------------------------------------------------------------------
 //                           TRUE NEUTRINO VERTEX LOCATION
@@ -400,6 +418,7 @@ void pndr::AnalysisNTuple::analyze(art::Event const & e)
               tr_id_charge      = RecoUtils::TrueParticleIDFromTotalRecoCharge(hit_assn);
               tr_id_hits        = RecoUtils::TrueParticleIDFromTotalRecoHits(hit_assn);
 
+              tr_n_hits         = hit_assn.size(); 
               tr_chi2_pr        = pid_assn[j]->Chi2Proton();
               tr_chi2_mu        = pid_assn[j]->Chi2Muon();
               tr_chi2_pi        = pid_assn[j]->Chi2Pion();
@@ -464,6 +483,7 @@ void pndr::AnalysisNTuple::analyze(art::Event const & e)
           sh_id_charge    = RecoUtils::TrueParticleIDFromTotalRecoCharge(hit_assn);
           sh_id_hits      = RecoUtils::TrueParticleIDFromTotalRecoHits(hit_assn);
           
+          sh_n_hits       = hit_assn.size();
           sh_dedx_size    = shw->dEdx().size();
           sh_start[0]     = shw->ShowerStart()[0];
           sh_start[1]     = shw->ShowerStart()[1];
@@ -495,15 +515,41 @@ void pndr::AnalysisNTuple::analyze(art::Event const & e)
 // ------------------------------------------------------------------------------
 
     // Get the GEANT information of the particles 
-    art::FindManyP< simb::MCParticle  > fmcp( mct_handle, e, m_geant_label );
+    art::FindManyP< simb::MCParticle > fmcp( mct_handle, e, m_geant_label );
+    art::FindManyP< simb::GTruth > fmgt( mct_handle, e, m_generator_label );
     art::Ptr< simb::MCTruth > mct(mct_handle, 0);
     std::vector< art::Ptr<simb::MCParticle> > mcp_assn = fmcp.at(0);
+    std::vector< art::Ptr<simb::GTruth> > mcgt_assn = fmgt.at(0);
     simb::MCNeutrino nu = mct->GetNeutrino();
-    
+
+    /*
+    // For getting hits associated with MCParticles
+    // Write a map of track Id's to a vector of art::Ptr<recob::Hits>
+    // For every hit, push it back onto the correct map key (track id)
+    // Could just push back a counter for the number of hits, 
+    // but might want to use the full hits at a later stage
+    std::map< int, std::vector< art::Ptr< recob::Hit > > TrackIdToHits;
+
+    for(int i = 0; i < hit_size; ++i) {
+      
+      art::Ptr< recob::Hit > hit( hit_handle, i );
+      
+      // Vector of tracks associated with individual hit
+      std::vector<sim::TrackIDE> trackIDs = bt_serv->HitToTrackIDEs(hit);
+
+      // Loop over vector of tracks and push the hit onto the map for each one
+      for (unsigned int idIt = 0; idIt < trackIDs.size(); ++idIt) {
+        // Push back the current hit onto each of the tracks associated with it
+        TrackIdToHits[trackIDs[idIt].trackID].push_back(hit);
+      }
+    }
+    */
+
+
     // Start defining truth variables
     t_nu_pdgcode          = nu.Nu().PdgCode();
     t_iscc                = nu.CCNC() == simb::curr_type_::kCC;
-    t_interaction         = nu.InteractionType();
+    t_interaction         = mcgt_assn[0]->fGint;
     t_vertex[0]           = nu.Nu().Vx();
     t_vertex[1]           = nu.Nu().Vy();
     t_vertex[2]           = nu.Nu().Vz();
@@ -531,9 +577,13 @@ void pndr::AnalysisNTuple::analyze(art::Event const & e)
     // Counters and filling the mcparticle_tree
     for(art::Ptr<simb::MCParticle> part : mcp_assn) {
 
+      //art::FindManyP< recob::Hit > fmhit( trk_handle, e, m_reco_track_label );
+      
       // ATTENTION: Cut on PGD codes which refer to elements (Argon39 and above) 
       // Only interested in the final state PARTICLES
       if(part->Process() != "primary" || part->PdgCode() >= 1000018039) continue;
+  
+      std::vector< art::Ptr< recob::Hit > > hits = bt_serv->TrackIdToHits_Ps(part->TrackId(), hit_vector); 
 
       t_particles++;
 
@@ -549,6 +599,7 @@ void pndr::AnalysisNTuple::analyze(art::Event const & e)
 
       p_id                  = part->TrackId();
       p_pdgcode             = part->PdgCode();
+      p_n_hits              = hits.size();
       p_vertex[0]           = part->Vx();
       p_vertex[1]           = part->Vy();
       p_vertex[2]           = part->Vz();
@@ -573,7 +624,7 @@ void pndr::AnalysisNTuple::analyze(art::Event const & e)
   }
 }
 
-void pndr::AnalysisNTuple::beginJob()
+void trees::AnalysisNTuple::beginJob()
 {
   // Implementation of optional member function here.
   // Event id
@@ -633,6 +684,7 @@ void pndr::AnalysisNTuple::beginJob()
   mcparticle_tree->Branch("time_now",              &time_now,              "time_now/I");
   mcparticle_tree->Branch("p_id",                  &p_id,                  "p_id/I");
   mcparticle_tree->Branch("p_pdgcode",             &p_pdgcode,             "p_pdgcode/I");
+  mcparticle_tree->Branch("p_n_hits",              &p_n_hits,              "p_n_hits/I");
   mcparticle_tree->Branch("p_vertex",              &p_vertex,              "p_vertex[3]/D");
   mcparticle_tree->Branch("p_end",                 &p_end,                 "p_end[3]/D");
   mcparticle_tree->Branch("p_momentum",            &p_momentum,            "p_momentum[3]/D");
@@ -644,6 +696,7 @@ void pndr::AnalysisNTuple::beginJob()
   // Reco Track tree branches
   recotrack_tree->Branch("event_id",               &event_id,               "event_id/I");
   recotrack_tree->Branch("time_now",               &time_now,               "time_now/I");
+  recotrack_tree->Branch("tr_n_hits",              &tr_n_hits,              "tr_n_hits/I");
   recotrack_tree->Branch("tr_id_energy",           &tr_id_energy,           "tr_id_energy/I");
   recotrack_tree->Branch("tr_id_charge",           &tr_id_charge,           "tr_id_charge/I");
   recotrack_tree->Branch("tr_id_hits",             &tr_id_hits,             "tr_id_hits/I");
@@ -666,6 +719,7 @@ void pndr::AnalysisNTuple::beginJob()
   // Reco Shower tree branches
   recoshower_tree->Branch("event_id",              &event_id,               "event_id/I");
   recoshower_tree->Branch("time_now",              &time_now,               "time_now/I");
+  recoshower_tree->Branch("sh_n_hits",             &sh_n_hits,              "sh_n_hits/I");
   recoshower_tree->Branch("sh_id_energy",          &sh_id_energy,           "sh_id_energy/I");
   recoshower_tree->Branch("sh_id_charge",          &sh_id_charge,           "sh_id_charge/I");
   recoshower_tree->Branch("sh_id_hits",            &sh_id_hits,             "sh_id_hits/I");
@@ -692,7 +746,7 @@ void pndr::AnalysisNTuple::beginJob()
 
 }
 
-void pndr::AnalysisNTuple::endJob()
+void trees::AnalysisNTuple::endJob()
 {
   // Implementation of optional member function here.
   cut_tree->Fill();
@@ -748,7 +802,7 @@ void pndr::AnalysisNTuple::endJob()
 
 }
 
-void pndr::AnalysisNTuple::reconfigure(fhicl::ParameterSet const & p)
+void trees::AnalysisNTuple::reconfigure(fhicl::ParameterSet const & p)
 {
    std::vector< int > blankVect;
    std::vector< std::vector< int > > input;
@@ -793,6 +847,7 @@ void pndr::AnalysisNTuple::reconfigure(fhicl::ParameterSet const & p)
   m_reco_shower_label            = p.get<std::string>("RecoShowerLabel");
   m_reco_track_calorimetry_label = p.get<std::string>("RecoTrackCalorimetryLabel");
   m_reco_track_particleid_label  = p.get<std::string>("RecoTrackParticleIDLabel");
+  m_hit_label                    = p.get<std::string>("HitLabel");
 }
 
-DEFINE_ART_MODULE(pndr::AnalysisNTuple)
+DEFINE_ART_MODULE(trees::AnalysisNTuple)
