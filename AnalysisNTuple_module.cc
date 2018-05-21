@@ -379,9 +379,9 @@ void trees::AnalysisNTuple::analyze(art::Event const & e)
           contained_track++;
 
           // Get the track-based variables
-          std::vector< art::Ptr<anab::Calorimetry> > cal_assn = fmcal.at(i);
-          std::vector< art::Ptr<anab::ParticleID> >  pid_assn = fmpid.at(i);
-          std::vector< art::Ptr<recob::Hit> >        hit_assn = fmhit.at(i);
+          std::vector< art::Ptr<anab::Calorimetry> > cal_assn = fmcal.at(trk_assn[i]->ID());
+          std::vector< art::Ptr<anab::ParticleID> >  pid_assn = fmpid.at(trk_assn[i]->ID());
+          std::vector< art::Ptr<recob::Hit> >        hit_assn = fmhit.at(trk_assn[i]->ID());
    
           // Loop over PID association
           for ( size_t j = 0; j < pid_assn.size(); ++j ){

@@ -5,10 +5,12 @@ PANDORA_DIR=${MRB_SOURCE}/analysistree/analysistree
 
 TEST=/pnfs/sbnd/persistent/sbndpro/SBNWorkshop0318/v06_70_01_01_SBNWorkshop0318/prodgenie_nu_singleinteraction_cryostat_gsimple-configd-v1/reco/5008435_0/prodgenie_sbnd_GenieGen-20180315T122730_c61dcedc-9f10-41c3-b876-03979165b6e7_G4-20180315T133000_DetSim-20180315T190259_Reco-20180316T015122.root
 
+TEST1=/pnfs/sbnd/persistent/sbndpro/SBNWorkshop0318/v06_70_01_01_SBNWorkshop0318/prodgenie_nu_singleinteraction_cryostat_gsimple-configd-v1/reco/files.list
+
 rm -rf $WORKING_DIR/*
 
 cd $WORKING_DIR
 
-lar -c run_analysisNTuple.fcl -s $TEST
+lar -c run_analysisNTuple.fcl -S $TEST1 > log.log
 
 cd $PANDORA_DIR
