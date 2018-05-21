@@ -220,6 +220,7 @@ void trees::AnalysisNTuple::analyze(art::Event const & e)
   e.getByLabel(m_pandora_label, pfp_handle );
 /*  std::vector< art::Ptr< recob::PFParticle > > pfp_vector;
   if (e.getByLabel(m_pandora_label, pfp_handle)) art::fill_ptr_vector(pfp_vector, pfp_handle);*/
+  //int pfp_size = pfp_vector.size();
   int pfp_size = pfp_handle->size();
   
   // Get the hit handle
@@ -321,7 +322,9 @@ void trees::AnalysisNTuple::analyze(art::Event const & e)
          || (reco_vertex_z < (-m_coordinateOffsetZ + m_selectedBorderZ))) return;
     
     c_contained++;
-    
+
+    std::cout << " ---------- Event " << event_id << "  ---------- " << std::endl;
+
     // Get track associations with PFParticles from Pandora
     art::FindManyP< recob::Track  > fmtrk( pfp_handle, e, m_reco_track_label );
 
@@ -391,7 +394,7 @@ void trees::AnalysisNTuple::analyze(art::Event const & e)
 
             // Only look at the collection plane, since this is where the dEdx
             // is acquired and we need this for the PIDA values
-            if (planenum!=2) continue;
+            if (planenum!=1) continue;
               
             // Loop over cal association
             for ( size_t k = 0; k < cal_assn.size(); ++k ){
@@ -404,7 +407,7 @@ void trees::AnalysisNTuple::analyze(art::Event const & e)
 
               // Only look at the collection plane, since this is where the dEdx
               // is acquired and we need this for the PIDA values
-              if (planenumcal!=2) continue;
+              if (planenumcal!=1) continue;
 
               // Add one to the counter for the event tree
               n_primary_tracks++;
@@ -442,10 +445,22 @@ void trees::AnalysisNTuple::analyze(art::Event const & e)
               tr_end[2] = track_end_z;
 
               tr_length = trk_assn[i]->Length();
+              
+              std::cout << " Length  : " << tr_length << std::endl;
+              std::cout << " PIDA    : " << tr_pida << std::endl;
+              std::cout << " Chi2_Mu : " << tr_chi2_mu << std::endl;
+              std::cout << " Chi2_Pi : " << tr_chi2_pi << std::endl;
+              std::cout << " Chi2_Pr : " << tr_chi2_pr << std::endl;
+              std::cout << " Chi2_Ka : " << tr_chi2_ka << std::endl;
+              std::cout << " KE      : " << tr_kinetic_energy << std::endl;
+              //for(unsigned int l = 0; l < tr_dedx_size; ++l) std::cout << " dEdx    : " << cal_assn[k]->dEdx()[l] << std::endl;
+              std::cout << " ------------------------------ " << std::endl;
+
 
               recotrack_tree->Fill();
-
+              break;
             }
+            break;
           }
         }
       }
