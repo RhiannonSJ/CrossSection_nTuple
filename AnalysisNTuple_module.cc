@@ -394,7 +394,7 @@ void trees::AnalysisNTuple::analyze(art::Event const & e)
 
             // Only look at the collection plane, since this is where the dEdx
             // is acquired and we need this for the PIDA values
-            if (planenum!=1) continue;
+            if (planenum!=2) continue;
               
             // Loop over cal association
             for ( size_t k = 0; k < cal_assn.size(); ++k ){
@@ -407,7 +407,7 @@ void trees::AnalysisNTuple::analyze(art::Event const & e)
 
               // Only look at the collection plane, since this is where the dEdx
               // is acquired and we need this for the PIDA values
-              if (planenumcal!=1) continue;
+              if (planenumcal!=2) continue;
 
               // Add one to the counter for the event tree
               n_primary_tracks++;
@@ -458,9 +458,7 @@ void trees::AnalysisNTuple::analyze(art::Event const & e)
 
 
               recotrack_tree->Fill();
-              break;
             }
-            break;
           }
         }
       }
